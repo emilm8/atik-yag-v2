@@ -1,0 +1,1586 @@
+<!doctype html>
+<html lang="az">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
+<title>Yağ İzi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F2EC; --surface:#FFFFFF; --sunk:#E7E9DF; --ink:#1C2016; --muted:#606856; --line:#D6D9CC;
+  --accent:#A86A12; --accent-soft:#F4E6CC; --on-accent:#FFFFFF; --deep:#26301C; --on-deep:#EEF0E6;
+  --ok:#2C7A4B; --ok-soft:#DDEFE3; --warn:#B4520F; --warn-soft:#F8E3D3; --crit:#AE2A1E; --crit-soft:#F7DEDA;
+  --paper:#FFFFFF; --paper-ink:#1A1A16; --paper-line:#CFCFC6;
+  --f-sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --r:8px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#13150F; --surface:#1C1F17; --sunk:#262A1F; --ink:#E8EAE0; --muted:#9CA290; --line:#343A2B;
+  --accent:#E1A33E; --accent-soft:#3A2E17; --on-accent:#1A1408; --deep:#0C0E09; --on-deep:#E8EAE0;
+  --ok:#62BC86; --ok-soft:#1E3326; --warn:#EE9257; --warn-soft:#3A2516; --crit:#F07A6D; --crit-soft:#3D1D19;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#13150F; --surface:#1C1F17; --sunk:#262A1F; --ink:#E8EAE0; --muted:#9CA290; --line:#343A2B;
+  --accent:#E1A33E; --accent-soft:#3A2E17; --on-accent:#1A1408; --deep:#0C0E09; --on-deep:#E8EAE0;
+  --ok:#62BC86; --ok-soft:#1E3326; --warn:#EE9257; --warn-soft:#3A2516; --crit:#F07A6D; --crit-soft:#3D1D19;
+  color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:14px/1.5 var(--f-sans)}
+h1,h2,h3{text-wrap:balance;margin:0;line-height:1.2}
+h2{font-size:20px;font-weight:600}
+h3{font-size:15px;font-weight:600}
+.mono,.num{font-family:var(--f-mono)}
+.num,td.n,th.n{font-variant-numeric:tabular-nums;text-align:right}
+.muted{color:var(--muted)}
+.small{font-size:12.5px}
+.lbl{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:600}
+a{color:var(--accent)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* top bar */
+.top{background:var(--deep);color:var(--on-deep);position:sticky;top:env(safe-area-inset-top,0px);z-index:20}
+.top-in{max-width:1240px;margin:0 auto;padding-block:10px;padding-inline:16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:16px;letter-spacing:.01em}
+.drop{width:22px;height:22px;flex:none}
+.brand small{font-weight:400;opacity:.7;font-size:12px}
+.top .sp{flex:1}
+.who{display:flex;align-items:center;gap:8px;font-size:12.5px}
+.who select{background:transparent;color:var(--on-deep);border:1px solid color-mix(in srgb,var(--on-deep) 30%,transparent);border-radius:6px;padding:5px 8px}
+.who select option{color:#111;background:#fff}
+.nav{max-width:1240px;margin:0 auto;padding-inline:16px;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+.nav button{background:none;border:0;color:var(--on-deep);opacity:.65;padding:9px 12px;border-bottom:2px solid transparent;white-space:nowrap;cursor:pointer;font-weight:500}
+.nav button.on{opacity:1;border-color:var(--accent)}
+.nav .cnt{display:inline-block;min-width:18px;padding:0 5px;margin-left:5px;border-radius:9px;background:var(--crit);color:#fff;font-size:11px;line-height:18px;text-align:center}
+
+.wrap{max-width:1240px;margin:0 auto;padding-block:20px 48px;padding-inline:16px;display:grid;gap:18px}
+.head{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;justify-content:space-between}
+.head p{margin:4px 0 0;color:var(--muted);max-width:70ch}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:18px}
+.grid2>*{min-width:0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:grid;gap:12px;min-width:0;align-content:start}
+.card.flat{background:transparent;border-style:dashed}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.kpi{background:var(--surface);padding:14px 16px;display:grid;gap:4px}
+.kpi b{font:600 24px/1.1 var(--f-mono);font-variant-numeric:tabular-nums}
+.kpi .sub{font-size:12px;color:var(--muted)}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--line);background:var(--surface);border-radius:7px;padding:7px 12px;cursor:pointer;font-weight:500;text-decoration:none;color:var(--ink);white-space:nowrap}
+.btn:hover{border-color:var(--muted)}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn.dark{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.btn.ghost{background:transparent}
+.btn.sm{padding:4px 9px;font-size:12.5px}
+.btn.danger{color:var(--crit);border-color:color-mix(in srgb,var(--crit) 40%,var(--line))}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+
+.pill{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:600;padding:2px 8px;border-radius:999px;background:var(--sunk);color:var(--muted);white-space:nowrap}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+.pill.crit{background:var(--crit-soft);color:var(--crit)}
+.pill.acc{background:var(--accent-soft);color:var(--accent)}
+
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600;text-align:left;background:var(--sunk);padding:8px 10px;white-space:nowrap}
+td{padding:8px 10px;border-top:1px solid var(--line);vertical-align:top}
+tr.hi td{background:color-mix(in srgb,var(--warn-soft) 55%,transparent)}
+td .flags{display:flex;gap:4px;flex-wrap:wrap;margin-top:3px}
+
+input[type=text],input[type=number],input[type=date],input[type=email],input[type=tel],select,textarea{background:var(--surface);border:1px solid var(--line);border-radius:7px;padding:7px 9px;min-width:0;max-width:100%}
+textarea{width:100%;min-height:60px;resize:vertical}
+.field{display:grid;gap:4px}
+.field>span{font-size:12px;color:var(--muted);font-weight:500}
+.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:12px}
+.form .full{grid-column:1/-1}
+
+.alerts{display:grid;gap:8px}
+.alert{display:grid;grid-template-columns:4px 1fr;gap:12px;align-items:stretch;background:var(--surface);border:1px solid var(--line);border-radius:7px;padding:10px 12px 10px 0;overflow:hidden}
+.alert i{background:var(--warn);border-radius:0 3px 3px 0}
+.alert.crit i{background:var(--crit)}
+.alert.info i{background:var(--muted)}
+.alert b{display:block;font-size:13px}
+.alert span{font-size:12.5px;color:var(--muted)}
+
+/* map */
+.map{width:100%;height:auto;display:block;background:var(--sunk);border-radius:7px}
+.map text{fill:var(--muted);font:11px var(--f-sans)}
+
+/* driver */
+.phone{max-width:480px;margin:0 auto;padding-block:16px 60px;padding-inline:16px;display:grid;gap:14px}
+.dhead{display:grid;gap:2px}
+.dhead h2{font-size:22px}
+.scan{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;padding:18px;border-radius:12px;border:0;background:var(--accent);color:var(--on-accent);font-size:19px;font-weight:700;cursor:pointer}
+.scan svg{width:30px;height:30px}
+.stop{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px;display:grid;gap:10px}
+.stop.done{opacity:.7}
+.stop-top{display:grid;grid-template-columns:34px 1fr auto;gap:10px;align-items:start}
+.seq{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--sunk);font:600 15px var(--f-mono)}
+.stop.done .seq{background:var(--ok-soft);color:var(--ok)}
+.stop-acts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stop-acts .btn{padding:10px}
+.netbar{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--sunk);border-radius:8px;padding:8px 12px;font-size:12.5px}
+.netbar.off{background:var(--warn-soft);color:var(--warn)}
+.switch{position:relative;width:40px;height:22px;border-radius:11px;border:0;background:var(--line);cursor:pointer;flex:none}
+.switch::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:var(--surface);transition:left .15s}
+.switch.on{background:var(--ok)}
+.switch.on::after{left:21px}
+
+.fills{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.fill{display:grid;justify-items:center;gap:6px;padding:10px 4px;border-radius:9px;border:1px solid var(--line);background:var(--surface);cursor:pointer;font-weight:600;font-size:13px}
+.fill.on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+.gauge{width:22px;height:34px;border:2px solid currentColor;border-radius:4px 4px 5px 5px;position:relative;overflow:hidden;opacity:.85}
+.gauge i{position:absolute;left:0;right:0;bottom:0;background:var(--accent)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 12px;cursor:pointer;font-family:var(--f-mono);font-size:13px}
+.chip.on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:7px;overflow:hidden}
+.seg button{border:0;background:var(--surface);padding:7px 12px;cursor:pointer}
+.seg button.on{background:var(--ink);color:var(--bg)}
+.sig{width:100%;height:130px;border:1px dashed var(--muted);border-radius:8px;background:var(--paper);touch-action:none;display:block}
+.thumb{width:64px;height:64px;object-fit:cover;border-radius:6px;border:1px solid var(--line)}
+
+/* modal */
+.scrim{position:fixed;inset:0;background:color-mix(in srgb,#000 45%,transparent);z-index:50;display:flex;align-items:flex-end;justify-content:center;padding-top:calc(env(safe-area-inset-top,0px) + 24px)}
+@media (min-width:700px){.scrim{align-items:center;padding:24px}}
+.modal{background:var(--bg);width:100%;max-width:560px;max-height:100%;overflow:auto;border-radius:14px 14px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom,0px));display:grid;gap:14px}
+.modal.wide{max-width:900px}
+@media (min-width:700px){.modal{border-radius:14px}}
+.mhead{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.x{border:0;background:var(--sunk);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:18px;line-height:1;flex:none}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:12px;display:grid;gap:8px}
+.warnbox{background:var(--warn-soft);color:var(--warn);border-radius:8px;padding:10px 12px;font-size:13px}
+.okbox{background:var(--ok-soft);color:var(--ok);border-radius:8px;padding:10px 12px;font-size:13px}
+
+/* paper documents (deliberately white in both themes: printed matter) */
+.paper{background:var(--paper);color:var(--paper-ink);border:1px solid var(--paper-line);border-radius:4px;padding:28px 24px;display:grid;gap:16px;font-size:12.5px;min-width:0}
+.paper table{font-size:12px}
+.paper th{background:transparent;color:var(--paper-ink);border-bottom:1.5px solid var(--paper-ink);padding:6px}
+.paper td{border-top:1px solid var(--paper-line);padding:6px}
+.paper .pmuted{color:#5c5c55}
+.paper .ptw{overflow-x:auto}
+.ph{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;border-bottom:2px solid var(--paper-ink);padding-bottom:12px}
+.logo{width:42px;height:42px;border-radius:8px;background:#26301C;display:grid;place-items:center}
+.sigs{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px;margin-top:10px}
+.sigs div{border-top:1px solid var(--paper-ink);padding-top:6px}
+.stickers{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.sticker{background:var(--paper);color:var(--paper-ink);border:1px dashed var(--paper-line);border-radius:10px;padding:10px;display:grid;justify-items:center;gap:4px;text-align:center}
+.sticker .qr{width:104px;height:104px}
+.sticker .qr img,.sticker .qr canvas{width:104px!important;height:104px!important}
+.sticker b{font:600 16px var(--f-mono);letter-spacing:.04em}
+.sticker small{font-size:10.5px;line-height:1.3}
+
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:9px;z-index:80;font-size:13.5px;max-width:calc(100% - 32px)}
+.demo{background:var(--accent-soft);color:var(--ink);font-size:12.5px}
+.demo .in{max-width:1240px;margin:0 auto;padding-block:7px;padding-inline:16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+.empty{padding:22px;text-align:center;color:var(--muted)}
+.list{display:grid;gap:8px}
+.li{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:10px 12px;background:var(--surface);border:1px solid var(--line);border-radius:8px;flex-wrap:wrap}
+.li>div{min-width:0}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+/* v4: tapşırıq sənədi 1.0 üzrə əlavələr */
+.btn{min-height:36px}
+.phone .btn,.modal .btn,.phone .chip,.modal .chip,.modal .seg button,.phone .seg button,.fill,.opt,.login .btn,.ctabs button{min-height:44px;min-width:44px}
+.modal input[type=text],.modal input[type=number],.modal input[type=date],.modal input[type=tel],.modal select,.phone input,.login input,.login select{min-height:44px}
+.fills{grid-template-columns:repeat(4,1fr)}
+.opts{display:grid;gap:8px}
+.opt{display:flex;gap:10px;align-items:center;width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--surface);cursor:pointer;text-align:left;font-weight:600}
+.opt.on{border-color:var(--accent);background:var(--accent-soft)}
+.opt[disabled]{cursor:default}
+.opt .dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--muted);flex:none}
+.opt.on .dot{border-color:var(--accent);background:radial-gradient(var(--accent) 42%,transparent 48%)}
+.subnav{display:flex;gap:6px;flex-wrap:wrap}
+.subnav button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 14px;cursor:pointer;font-weight:500;color:var(--ink)}
+.subnav button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.subnav .cnt,.ctabs .cnt{display:inline-block;min-width:18px;padding:0 5px;margin-left:5px;border-radius:9px;background:var(--crit);color:#fff;font-size:11px;line-height:18px;text-align:center}
+.ctabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:var(--sunk);padding:4px;border-radius:10px}
+.ctabs button{border:0;background:transparent;border-radius:8px;padding:10px;font-weight:600;cursor:pointer;color:var(--ink)}
+.ctabs button.on{background:var(--surface);box-shadow:0 1px 2px rgb(0 0 0/.1)}
+.done-ok{display:grid;justify-items:center;gap:4px;text-align:center;padding:18px;background:var(--ok-soft);color:var(--ok);border-radius:12px}
+.done-ok .big{font-size:42px;line-height:1;font-weight:700}
+.cam{width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px;background:#000;display:block}
+.kpi .rng{font-size:11px;color:var(--muted);font-family:var(--f-mono)}
+button.alert{text-align:left;width:100%;font:inherit;color:inherit;cursor:pointer}
+button.alert:hover{border-color:var(--muted)}
+.login{max-width:440px;margin:32px auto;padding-inline:16px;display:grid;gap:14px}
+.strike{text-decoration:line-through;opacity:.6}
+.phone{overflow-x:hidden}
+.phone .li{flex-wrap:wrap}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:13px;margin:0}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0;min-width:0;overflow-wrap:anywhere}
+.stop-acts .full{grid-column:1/-1}
+@media (min-width:900px){.kpis.k4{grid-template-columns:repeat(4,1fr)}}
+.sumline{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="modal"></div>
+<div id="toast"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+"use strict";
+/* ================= sabitlər ================= */
+const DENS = 0.92; // 1 litr atıq yağ ≈ 0.92 kq (çevirmə əmsalı, hər qeyddə saxlanır)
+const FILL = {'1/4':.25,'1/2':.5,'3/4':.75,dolu:1};
+const FILL_KEYS = ['1/4','1/2','3/4','dolu'];
+const FILL_LBL = {'1/4':'1/4','1/2':'1/2','3/4':'3/4',dolu:'Dolu'};
+const OP = {bosaltdi:'Yağı boşaltdım, bidon qaldı',goturdu:'Dolu bidonu götürdüm'};
+const OP_S = {bosaltdi:'boşaldıldı',goturdu:'dolu götürüldü'};
+const AFTER = {bos:'Boş qaldı',qaliq:'Qalıq var'};
+const PROB = {su:'Su qarışığı',cirk:'Çirklənmə',sizma:'Sızma',diger:'Digər'};
+const CONTRACT = {biz:'Biz obyektə ödəyirik',pulsuz:'Pulsuz yığım',obyekt:'Obyekt xidmət üçün bizə ödəyir'};
+const CONTRACT_S = {biz:'Biz ödəyirik',pulsuz:'Pulsuz',obyekt:'Obyekt ödəyir'};
+const BASE = {kq:'₼ / kq',litr:'₼ / litr',sefer:'₼ / səfər',dovr:'sabit aylıq məbləğ'};
+const SKIP_R = ['Obyekt bağlıdır','Yağ yoxdur','Giriş mümkün deyil','Müştəri təxirə saldı','Digər'];
+const LEFT_R = ['Boş idi','Əlçatan olmadı','Növbəti səfərə qaldı','Digər'];
+const NOREP_R = ['Nümayəndə yerində deyil','İmzadan imtina etdi','Digər'];
+const COND = {normal:'Normal',zedeli:'Zədəli',itib:'İtib',dayan:'İstifadədən çıxarılıb'};
+const BFILL = {bos:'Boş',qaliq:'Qalıq var',dolu:'Dolu',bilinmir:'Bilinmir'};
+const CLEAN = {temiz:'Təmizlənib',yuyulmali:'Yuyulmalıdır'};
+const SYNC = {telefonda:'Telefonda saxlanıb',gozleyir:'Göndərilmə gözləyir',gonderilib:'Serverə göndərilib',yoxlama:'Yoxlama tələb olunur',redd:'Rədd edildi'};
+const SYNC_C = {telefonda:'warn',gozleyir:'acc',gonderilib:'ok',yoxlama:'crit',redd:'crit'};
+const VST = {gozlenilir:'Gözlənilir',qismen:'Qismən icra edildi',tamam:'Tamamlandı',goturulmedi:'Götürülmədi'};
+const REQ_T = {duzelis:'Düzəliş sorğusu',aidiyyet:'Bidon aidiyyəti',namelum:'Naməlum QR kod',kenar:'Marşrutdan kənar yığım'};
+const CAPS = [20,30,50,60];
+const TARE = {20:1.2,30:1.6,50:2.4,60:2.9};
+const EXP_T = {yanacaq:'Yanacaq',yemek:'Yemək',temir:'Təmir',dayanacaq:'Dayanacaq',diger:'Digər'};
+const MONTHS = ['yanvar','fevral','mart','aprel','may','iyun','iyul','avqust','sentyabr','oktyabr','noyabr','dekabr'];
+const OWNERS = ['Ramil Əsədov','Vüqar Rzayev','Səbinə (mühasib)'];
+
+const pad = n => String(n).padStart(2,'0');
+const dk = d => {const x=new Date(d);return x.getFullYear()+'-'+pad(x.getMonth()+1)+'-'+pad(x.getDate())};
+const TODAY = dk(Date.now());
+const addDays = (k,n) => {const d=new Date(k+'T12:00:00');d.setDate(d.getDate()+n);return dk(d)};
+const diffDays = (a,b) => Math.round((new Date(a+'T12:00:00')-new Date(b+'T12:00:00'))/864e5);
+const fd = k => {if(!k)return '—';const d=new Date(k+'T12:00:00');return d.getDate()+' '+MONTHS[d.getMonth()]};
+const fdy = k => {if(!k)return '—';const d=new Date(k+'T12:00:00');return pad(d.getDate())+'.'+pad(d.getMonth()+1)+'.'+d.getFullYear()};
+const ft = ts => {const d=new Date(ts);return pad(d.getHours())+':'+pad(d.getMinutes())};
+const fdt = ts => ts?fd(dk(ts))+', '+ft(ts):'—';
+const r1 = n => Math.round(n*10)/10;
+const r2 = n => Math.round(n*100)/100;
+const money = n => (n<0?'−':'')+Math.abs(n).toLocaleString('az-AZ',{minimumFractionDigits:2,maximumFractionDigits:2})+' ₼';
+const q1 = n => (Math.round(n*10)/10).toLocaleString('az-AZ',{maximumFractionDigits:1});
+const esc = s => String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const monthStart = k => k.slice(0,8)+'01';
+const weekStart = k => {const d=new Date(k+'T12:00:00');const w=(d.getDay()+6)%7;return addDays(k,-w)};
+const uid = () => (window.crypto&&crypto.randomUUID)?crypto.randomUUID():Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,10);
+function hav(a,b,c,d){const R=6371e3,t=Math.PI/180;const x=Math.sin((c-a)*t/2)**2+Math.cos(a*t)*Math.cos(c*t)*Math.sin((d-b)*t/2)**2;return 2*R*Math.asin(Math.sqrt(x))}
+const QR_BASE = location.protocol.startsWith('http')?location.origin+location.pathname:'https://atik-yag.vercel.app/';
+
+/* ================= vəziyyət ================= */
+let S, U = {user:null, view:'panel', sub:{emel:'yigim',obyekt:'obyektler',maliyye:'hesab',hesabat:'sverka'}, ctab:'route', whTab:'pending',
+  modal:null, form:null, offline:false, gpsMode:'sim', toast:null,
+  f:{from:addDays(TODAY,-6), to:TODAY, obj:'', crew:'', st:''}, rdate:TODAY, bdate:{from:addDays(TODAY,-6),to:TODAY},
+  sv:{obj:'OB-001', preset:'kecenay', from:addDays(TODAY,-1), to:addDays(TODAY,-1)}, batch:null, qr:false, wh:{}, showClosed:false,
+  login:{id:'admin',err:''}, chgMonth:TODAY.slice(0,7)};
+
+const nid = (k,p,w=4) => p+'-'+String(++S.seq[k]).padStart(w,'0');
+const obj = id => S.objects.find(o=>o.id===id);
+const bid = id => S.bidons.find(b=>b.id===id);
+const crew = id => S.crews.find(c=>c.id===id);
+function users(){return [...S.staff.map(s=>({...s,label:s.name+' · '+(s.role==='admin'?'Rəhbər':'Anbar məsulu')})),
+  ...S.crews.map(c=>({id:c.id,name:c.driver,role:'crew',pin:c.pin,status:c.status,label:c.driver+' · Ekipaj '+c.car}))]}
+const me = () => U.user?users().find(u=>u.id===U.user):null;
+const myName = () => me()?.name||'—';
+
+function conv(v,f,t){if(f===t)return v;return f==='litr'?v*DENS:v/DENS}
+function priceOn(o,date){let p=o.prices[0];for(const r of o.prices) if(r.from<=date) p=r;return p.price}
+function colIn(c,unit){if(c.mode==='olcu')return conv(+c.qty,c.unit,unit);return conv(FILL[c.fill]*c.cap,'litr',unit)}
+const colKg = c => colIn(c,'kq');
+function kgRule(c){if(c.mode==='olcu')return c.unit==='kq'?(c.scale?'tərəzi: ümumi − boş bidon':'ölçülmüş, kq'):`ölçülmüş litr × ${DENS}`;return `doluluq ${FILL_LBL[c.fill]} × ${c.cap} L × ${DENS}`}
+function calcAmt(c){const k=c.k;
+  if(k.contract==='pulsuz')return {amt:0,st:'yoxdur'};
+  if(k.base==='sefer'||k.base==='dovr')return {amt:0,st:k.base==='sefer'?'səfər üzrə':'aylıq haqq'};
+  if(c.mode!=='olcu')return {amt:null,st:'gözləyir'};
+  if(c.exc&&c.exc.status!=='təsdiqləndi')return {amt:null,st:'gözləyir'};
+  return {amt:r2(colIn(c,k.base)*k.priceAt),st:'hesablandı'};
+}
+function derive(c){c.kg=r1(colKg(c));c.rule=kgRule(c);const a=calcAmt(c);c.amount=a.amt;c.amtSt=a.st}
+const qtyTxt = c => c.mode==='olcu'?`${q1(c.qty)} ${c.unit}`:`${FILL_LBL[c.fill]} · ≈ ${q1(colIn(c,'litr'))} L`;
+const accTxt = c => c.mode==='olcu'?'<span class="pill ok">ölçülmüş</span>':'<span class="pill">təxmini</span>';
+const gpsTxt = g => !g||!g.ok?'GPS alınmadı':`${g.dist} m (±${g.acc} m)${g.sim?' · sınaq':''}`;
+
+const srvRec = x => x.sync==='gonderilib'||x.sync==='yoxlama';
+const isCrew = () => me()?.role==='crew';
+const seen = x => isCrew()||srvRec(x);
+const COLS = () => S.collections.filter(c=>seen(c)&&!c.voided);
+
+/* ================= bidon ================= */
+const locTxt = l => !l?'—':l.t==='obyekt'?(obj(l.id)?.name||l.id):l.t==='neqliyyat'?'Yoldadır · '+(crew(l.id)?.car||l.id):'Anbarda';
+const atObj = oid => S.bidons.filter(b=>b.loc.t==='obyekt'&&b.loc.id===oid&&(b.cond==='normal'||b.cond==='zedeli'));
+const inCar = cid => S.bidons.filter(b=>b.loc.t==='neqliyyat'&&b.loc.id===cid);
+function moveB(b,to,why,by,ref,ts=Date.now()){
+  S.moves.push({id:nid('mv','H',5),ts,bidonId:b.id,kind:'yer',from:b.loc?{...b.loc}:null,to:{...to},why,by,ref:ref||null});
+  b.loc={...to};b.objectId=to.t==='obyekt'?to.id:null;b.since=dk(ts);
+}
+function condB(b,cond,why,by,ts=Date.now()){S.moves.push({id:nid('mv','H',5),ts,bidonId:b.id,kind:'vəziyyət',fromC:b.cond,toC:cond,why,by});b.cond=cond}
+function normCode(raw){let v=String(raw||'').trim();try{if(/^https?:/i.test(v)){const u=new URL(v);v=u.searchParams.get('b')||v}}catch(e){}
+  v=v.toUpperCase().replace(/^YAG/,'YAĞ').replace(/\s+/g,'');if(/^\d+$/.test(v))v='YAĞ-'+v.padStart(4,'0');if(/^YAĞ\d+$/.test(v))v='YAĞ-'+v.slice(3).padStart(4,'0');return v}
+
+/* ================= marşrut və ziyarət ================= */
+const stopsOf = (date,cid) => S.routes.filter(r=>r.date===date&&r.crewId===cid).sort((a,b)=>a.seq-b.seq);
+const visitOf = r => S.visits.find(v=>v.routeId===r.id&&seen(v));
+const colsOf = r => S.collections.filter(c=>c.routeId===r.id&&!c.voided&&seen(c));
+function stopState(r){const v=visitOf(r);if(v)return v.status;return colsOf(r).length?'qismen':'gozlenilir'}
+function stopCount(r){
+  const rec=[...new Set(colsOf(r).map(c=>c.bidonId))];
+  const placed=new Set(S.moves.filter(m=>m.ref===r.id&&m.why==='Boş bidon qoyuldu').map(m=>m.bidonId));
+  const exp=[...new Set([...rec,...atObj(r.objectId).filter(b=>!placed.has(b.id)).map(b=>b.id)])];
+  return {rec,exp,left:exp.filter(id=>!rec.includes(id))};
+}
+const stPill = (s,open) => s==='tamam'?'<span class="pill ok">Tamamlandı</span>':s==='qismen'?`<span class="pill acc">Qismən icra edildi${open?' · davam edir':''}</span>`:s==='goturulmedi'?'<span class="pill warn">Götürülmədi</span>':'<span class="pill">Gözlənilir</span>';
+const syncPill = s => `<span class="pill ${SYNC_C[s]}">${SYNC[s]}</span>`;
+
+/* ================= hesablaşma ================= */
+const sgK = k => k==='biz'?-1:1; // + obyekt bizə borcludur, − biz obyektə borcluyuq
+function ledger(oid){
+  const E=[];
+  for(const c of S.collections){if(c.objectId!==oid||!srvRec(c)||!(c.amount>0))continue;const s=sgK(c.k.contract);
+    E.push({date:c.date,ts:c.ts,kind:'Yığım',ref:c.id,amt:s*c.amount,txt:`${c.bidonId} · ${q1(colIn(c,c.k.base))} ${c.k.base} × ${c.k.priceAt.toFixed(2)} ₼`});
+    if(c.voided)E.push({date:dk(c.voidAt),ts:c.voidAt,kind:'Ləğv (əks qeyd)',ref:c.id,amt:-s*c.amount,txt:c.voidWhy||''})}
+  for(const v of S.visits){if(v.objectId!==oid||!srvRec(v)||!(v.fee>0))continue;E.push({date:v.date,ts:v.ts,kind:'Səfər haqqı',ref:v.id,amt:sgK(v.contract)*v.fee,txt:`${v.fee.toFixed(2)} ₼ / səfər`})}
+  for(const ch of S.charges){if(ch.objectId!==oid)continue;E.push({date:ch.date,ts:+new Date(ch.date+'T08:00:00'),kind:'Aylıq haqq',ref:ch.id,amt:sgK(ch.contract)*ch.amount,txt:ch.period})}
+  for(const p of S.payments){if(p.objectId!==oid)continue;E.push({date:p.date,ts:p.createdAt||+new Date(p.date+'T12:00:00'),kind:p.dir==='out'?'Biz ödədik':'Obyekt ödədi',ref:p.id,amt:p.dir==='out'?p.amount:-p.amount,txt:[p.method,p.ref,p.note].filter(Boolean).join(' · '),pay:true})}
+  return E.sort((a,b)=>a.date.localeCompare(b.date)||a.ts-b.ts);
+}
+const balance = (oid,before='9999') => r2(ledger(oid).filter(e=>e.date<before).reduce((a,e)=>a+e.amt,0));
+function balText(b,o){if(Math.abs(b)<0.005)return 'Qalıq yoxdur';
+  if(o&&o.contract==='biz')return b<0?'Biz obyektə '+money(-b)+' borcluyuq':'Obyektə '+money(b)+' avans verilib';
+  if(o&&o.contract==='obyekt')return b>0?'Obyekt bizə '+money(b)+' borcludur':'Obyektin '+money(-b)+' avansı var';
+  return b>0?'Obyekt bizə '+money(b)+' borcludur':'Biz obyektə '+money(-b)+' borcluyuq'}
+function pendEst(oid){const cs=COLS().filter(c=>(!oid||c.objectId===oid)&&c.amtSt==='gözləyir');return {n:cs.length,kg:cs.reduce((a,c)=>a+c.kg,0)}}
+function buyerDebt(){const m={};for(const s of S.sales){const b=m[s.buyer]||(m[s.buyer]={kg:0,amt:0,paid:0});b.kg+=s.kg;b.amt+=s.amount}
+  for(const p of S.buyerPays){const b=m[p.buyer]||(m[p.buyer]={kg:0,amt:0,paid:0});b.paid+=p.amount}return m}
+
+/* ================= anbar qalığı ================= */
+function stockParts(date='9999'){const o=S.stock.opening;const op=o&&o.date<=date?o.kg:0;
+  const inn=S.batches.filter(b=>b.date<=date).reduce((a,b)=>a+b.net,0),out=S.sales.filter(s=>s.date<=date).reduce((a,s)=>a+s.kg,0),adj=S.stock.adj.filter(a=>a.date<=date).reduce((x,a)=>x+a.kg,0);
+  return {op,inn,out,adj,total:r1(op+inn-out+adj)}}
+const stockAt = d => stockParts(d).total;
+const pendingCols = cid => S.collections.filter(c=>c.crewId===cid&&srvRec(c)&&!c.voided&&!c.batchId);
+
+/* ================= yığım qeydi ================= */
+function newCol(p){
+  const o=obj(p.objectId),b=p.b,date=dk(p.ts);
+  const c={id:nid('col','Y',5),opId:p.opId||uid(),ts:p.ts,date,serverTs:null,sync:'telefonda',crewId:p.crewId,objectId:o.id,bidonId:b.id,cap:b.cap,routeId:p.routeId||null,
+    offRoute:p.offRoute||null,second:p.second||null,op:p.op,after:p.op==='bosaltdi'?(p.after||'bos'):null,mode:p.mode,
+    qty:p.mode==='olcu'?+p.qty:null,unit:p.mode==='olcu'?p.unit:null,fill:p.mode==='texmini'?p.fill:null,scale:p.scale||null,factor:DENS,
+    quality:p.quality||'normal',prob:p.prob||null,manual:!!p.manual,gps:p.gps||{ok:false},dur:p.dur||null,
+    k:{contract:o.contract,base:o.base,priceAt:priceOn(o,date)},batchId:null,exc:p.exc||null,conflict:null,voided:false,edits:[],note:p.note||''};
+  derive(c);S.collections.push(c);
+  if(c.op==='bosaltdi')b.fill=c.after;
+  else {moveB(b,{t:'neqliyyat',id:c.crewId},'Dolu bidon götürüldü',crew(c.crewId)?.driver,c.routeId,c.ts);b.fill='dolu'}
+  return c;
+}
+function newVisit(r,crewId,ts,status,x={}){
+  const o=obj(r.objectId);const fee=status!=='goturulmedi'&&o.base==='sefer'&&o.contract!=='pulsuz'?priceOn(o,dk(ts)):0;
+  const v=Object.assign({id:nid('vis','Z',5),opId:uid(),routeId:r.id,date:dk(ts),objectId:o.id,crewId,ts,serverTs:null,sync:'telefonda',status,left:{},skip:null,skipNote:'',sign:null,noRep:null,contract:o.contract,fee},x);
+  S.visits.push(v);return v;
+}
+/* "server" qəbulu: təkrar opId ikinci qeyd yaratmır; ziddiyyət səssizcə birləşdirilmir */
+function serverAccept(x,kind){
+  const c=crew(x.crewId);
+  if(c&&c.status!=='aktiv'){x.sync='redd';S.notices.push({id:uid(),t:'Bağlı hesabdan gələn qeyd rədd edildi',d:`${c.driver}: ${fdt(x.ts)} tarixli ${kind==='col'?'yığım ('+x.bidonId+')':'qeyd'} qəbul edilmədi`});return 'redd'}
+  if(S.srvOps.includes(x.opId))return 'dup';
+  S.srvOps.push(x.opId);x.serverTs=Date.now();
+  if(kind==='col'){
+    const others=S.collections.filter(y=>y!==x&&y.bidonId===x.bidonId&&y.date===x.date&&srvRec(y)&&!y.voided&&!(y.crewId===x.crewId&&x.second));
+    if(others.length){x.sync='yoxlama';x.conflict=others.map(y=>y.id);others.forEach(y=>{y.sync='yoxlama';y.conflict=[...new Set([...(y.conflict||[]),x.id])]});return 'conflict'}
+    x.sync=(x.offRoute||x.second||(x.exc&&x.exc.status==='gözləyir'))?'yoxlama':'gonderilib';return 'ok';
+  }
+  x.sync='gonderilib';return 'ok';
+}
+const pendingSync = cid => [...S.collections,...S.visits,...S.requests].filter(x=>x.crewId===cid&&(x.sync==='telefonda'||x.sync==='gozleyir'));
+
+/* ================= nümunə məlumat ================= */
+function seed(){
+  const R=rng(20261002);
+  S={v:4,seq:{col:0,vis:0,pay:0,exp:0,sale:0,bpay:0,rep:6,stop:0,batch:0,mv:0,req:0,adj:0,chg:0},company:'Atıq Yağ Xidməti',phone:'+994 50 444 12 48',expMode:'avans',
+    settings:{thrMeas:5,thrEst:20,editMin:30,late:30},
+    staff:[{id:'admin',name:'Ramil Əsədov',role:'admin',pin:'1111',status:'aktiv'},{id:'anbar',name:'Vüqar Rzayev',role:'anbar',pin:'2222',status:'aktiv'}],
+    crews:[],objects:[],bidons:[],moves:[],collections:[],visits:[],routes:[],batches:[],requests:[],payments:[],charges:[],
+    stock:{opening:null,adj:[]},sales:[],buyerPays:[],expenses:[],advances:[],reports:[],closed:{},alertSt:{},notices:[],srvOps:[],lastBackup:null};
+  S.crews=[
+    {id:'C1',driver:'Elvin Məmmədov',helper:'Rauf Quliyev',car:'10-AB-123',phone:'+994 55 210 34 11',email:'elvin.yag@gmail.com',pin:'3333',status:'aktiv',since:addDays(TODAY,-12)},
+    {id:'C2',driver:'Tural Həsənov',helper:'Nicat Babayev',car:'90-RT-456',phone:'+994 70 318 22 09',email:'tural.yag@gmail.com',pin:'4444',status:'aktiv',since:addDays(TODAY,-60)},
+    {id:'C3',driver:'Kamran Əliyev',helper:'Rauf Quliyev',car:'10-AB-123',phone:'+994 51 677 40 02',email:'kamran.yag@gmail.com',pin:'5555',status:'bağlı',since:addDays(TODAY,-90),closedAt:addDays(TODAY,-13)}];
+  const O=[
+    ['Dəniz Balıq Evi','restoran','Neftçilər pr. 54','Səbail',40.3662,49.8421,'Aysel Qasımova','+994 50 311 20 41','biz',0.70,'litr',2,true,'Giriş arxa qapıdan, mətbəxə zəng edin.'],
+    ['Xəzər Palace Otel','otel','Üzeyir Hacıbəyov küç. 12','Səbail',40.3721,49.8512,'Kamal Rüstəmov (mətbəx)','+994 12 498 10 10','obyekt',5,'sefer',3,true,'Xidməti giriş −1 mərtəbə, mühafizəyə ad deyin.'],
+    ['Nərgiz Kafe','restoran','Nizami küç. 88','Nəsimi',40.3771,49.8433,'Leyla Sadıqova','+994 55 402 18 77','pulsuz',0,'litr',3,false,''],
+    ['Qala Kabab','restoran','Asəf Zeynallı küç. 6','Səbail',40.3671,49.8353,'Orxan Hüseynov','+994 50 233 91 05','biz',0.65,'kq',2,false,'Bidonlar həyətdə, sağ tərəfdə.'],
+    ['Sahil Grand Otel','otel','Bakıxanov küç. 3','Səbail',40.3694,49.8481,'Fidan Əhmədova (satınalma)','+994 12 505 44 00','obyekt',60,'dovr',7,true,'Yük girişi Bakıxanov tərəfdən.'],
+    ['Bulvar Çayxanası','restoran','Dənizkənarı bulvar','Səbail',40.3642,49.8534,'Elşən Kərimov','+994 77 501 66 23','pulsuz',0,'litr',7,false,''],
+    ['Ləzzət Dönər','restoran','Nəriman Nərimanov pr. 22','Nərimanov',40.4022,49.8703,'Ramin Abbasov','+994 50 744 03 18','biz',0.60,'litr',1,false,''],
+    ['Yaşıl Bağ Restoranı','restoran','Babək pr. 41','Xətai',40.3843,49.9002,'Səbinə Məlikova','+994 55 812 47 60','biz',0.72,'kq',3,true,'Səbinə xanım 13:00-dan sonra.'],
+    ['Nərimanov Burger','restoran','Təbriz küç. 15','Nərimanov',40.4051,49.8622,'Fərid Novruzov','+994 70 266 11 38','obyekt',4,'sefer',2,false,''],
+    ['Liman Bistro','restoran','Xətai pr. 9','Xətai',40.3783,49.8864,'Günay İsmayılova','+994 51 390 72 14','biz',0.68,'litr',3,false,'']];
+  const caps=[[20,20],[30,30,60],[20],[20,20],[30,30,50],[20],[20,20],[30,30],[20],[20,20]];let bn=0;
+  const mkB=(cap,loc,since,cond)=>{bn++;const b={id:'YAĞ-'+pad(bn).padStart(4,'0'),cap,tare:TARE[cap]||r1(cap*.05),objectId:loc.t==='obyekt'?loc.id:null,loc:null,cond:cond||'normal',fill:'bos',clean:loc.t==='anbar'?'temiz':null,since};
+    S.bidons.push(b);moveB(b,loc,'İlkin qeydiyyat','Ramil Əsədov',null,+new Date(since+'T09:00:00'));return b};
+  O.forEach((r,i)=>{
+    const id='OB-'+pad(i+1).padStart(3,'0');
+    const o={id,name:r[0],type:r[1],address:r[2],zone:r[3],lat:r[4],lng:r[5],contact:r[6],phone:r[7],contract:r[8],base:r[10],freq:r[11],needSign:r[12],access:r[13],status:'aktiv',
+      prices:[{from:addDays(TODAY,-120),price:r[9]}]};
+    if(i===0)o.prices=[{from:addDays(TODAY,-120),price:0.65},{from:addDays(TODAY,-10),price:0.70}];
+    S.objects.push(o);
+    caps[i].forEach(cap=>mkB(cap,{t:'obyekt',id},addDays(TODAY,-110)));
+  });
+  S.bidons[S.bidons.length-1].cond='zedeli';
+  const lost=mkB(20,{t:'obyekt',id:'OB-003'},addDays(TODAY,-110));lost.cond='itib';
+  [20,20,30,30].forEach(c=>mkB(c,{t:'anbar',id:'A'},addDays(TODAY,-40)));
+  const stopped=mkB(20,{t:'anbar',id:'A'},addDays(TODAY,-200));condB(stopped,'dayan','Dibi çatlayıb, istifadədən çıxarıldı','Ramil Əsədov',+new Date(addDays(TODAY,-20)+'T10:00:00'));
+  [20,20].forEach(c=>mkB(c,{t:'neqliyyat',id:'C1'},addDays(TODAY,-5)));mkB(20,{t:'neqliyyat',id:'C2'},addDays(TODAY,-5));
+  S.seq.stop=0;
+  const addStop=(date,cr,oid,win,note)=>{const r={id:'M'+(++S.seq.stop),date,crewId:cr,seq:S.routes.filter(x=>x.date===date&&x.crewId===cr).length+1,objectId:oid,win,note:note||''};S.routes.push(r);return r};
+  const zoneCrew=(z,d)=>(['Nərimanov','Xətai'].includes(z))?'C2':(d<-12?'C3':'C1');
+  const fillPick=()=>{const x=R();return x<.2?'1/4':x<.5?'1/2':x<.8?'3/4':'dolu'};
+  const sent=(x,lag)=>{x.sync='gonderilib';x.serverTs=x.ts+(lag||Math.round(2e3+R()*25e3));S.srvOps.push(x.opId)};
+  const gpsR=()=>R()<.06?{ok:false}:{ok:true,dist:Math.round(8+R()*60),acc:Math.round(5+R()*18)};
+  for(let d=-30;d<=-1;d++){
+    const date=addDays(TODAY,d);
+    for(const o of S.objects){
+      const lastD=S.visits.filter(v=>v.objectId===o.id&&v.status!=='goturulmedi').map(v=>diffDays(v.date,TODAY)).pop();
+      if(lastD!=null&&d-lastD<o.freq)continue;
+      if(o.id==='OB-003'&&d>-8)continue; // gecikən obyekt
+      const cr=zoneCrew(o.zone,d),r=addStop(date,cr,o.id,'09:00–18:00','');
+      const ts0=+new Date(date+'T'+pad(9+Math.floor(R()*8))+':'+pad(Math.floor(R()*60))+':00');
+      if(R()<0.05){sent(newVisit(r,cr,ts0,'goturulmedi',{skip:R()<.5?'Obyekt bağlıdır':'Yağ yoxdur'}));continue}
+      const left={};let n=0;
+      atObj(o.id).forEach((b,j)=>{
+        if(R()<0.05){left[b.id]='Boş idi';return}
+        const meas=R()<.8,fill=fillPick(),lit=FILL[fill]*b.cap*(0.85+R()*.17),unit=R()<.6?'kq':'litr';
+        const prob=R()<.06;
+        const c=newCol({crewId:cr,ts:ts0+j*90e3,objectId:o.id,b,routeId:r.id,op:'bosaltdi',after:R()<.9?'bos':'qaliq',mode:meas?'olcu':'texmini',
+          qty:meas?r1(conv(lit,'litr',unit)):null,unit,fill,quality:prob?'problem':'normal',prob:prob?{type:R()<.5?'su':'cirk',note:'',photo:null}:null,gps:gpsR(),dur:Math.round(9+R()*16)*1000});
+        sent(c);n++;
+      });
+      const v=newVisit(r,cr,ts0+n*90e3+60e3,Object.keys(left).length?'qismen':'tamam',{left,sign:o.needSign&&R()<.9?{name:o.contact,img:null}:null});
+      if(o.needSign&&!v.sign)v.noRep='Nümayəndə yerində deyil';
+      sent(v);
+    }
+  }
+  // xüsusi hallar
+  const cOf=(oid,k)=>S.collections.filter(c=>c.objectId===oid);
+  const far=cOf('OB-008')[2]; if(far)far.gps={ok:true,dist:340,acc:12};
+  const man=cOf('OB-010').slice(-1)[0]; if(man){man.manual=true;man.note='Stiker cırılıb, kod əl ilə yazıldı'}
+  const late=cOf('OB-004').slice(-2)[0]; if(late)late.serverTs=late.ts+3*36e5+12*6e4;
+  const big=cOf('OB-007').find(c=>c.date===addDays(TODAY,-3));
+  if(big){big.mode='olcu';big.qty=23.5;big.unit='litr';big.fill=null;big.exc={reason:'Bidon ağzına qədər dolu idi, qapaq üstündə də yağ var',status:'gözləyir'};big.sync='yoxlama';derive(big)}
+  // anbar partiyaları (günün cəmi yox, konkret boşaltma)
+  const mkBatch=(cid,ts,cols,net,note)=>{const declared=r1(cols.reduce((a,c)=>a+c.kg,0));
+    const b={id:nid('batch','Q',4),crewId:cid,ts,date:dk(ts),colIds:cols.map(c=>c.id),bidonIds:[],declared,hasEst:cols.some(c=>c.mode!=='olcu'),gross:r1(net),tare:0,net:r1(net),diff:r1(net-declared),by:'Vüqar Rzayev',note:note||'',clean:null};
+    cols.forEach(c=>c.batchId=b.id);S.batches.push(b);return b};
+  for(let d=-30;d<=-1;d++){const date=addDays(TODAY,d);
+    for(const cr of ['C1','C2','C3']){const cs=S.collections.filter(c=>c.date===date&&c.crewId===cr&&!c.batchId);if(!cs.length)continue;
+      const f=()=>0.97+R()*.04;
+      if(d===-2&&cr==='C1'&&cs.length>1){const h=Math.ceil(cs.length/2);const a=cs.slice(0,h),b=cs.slice(h);
+        mkBatch(cr,+new Date(date+'T13:10:00'),a,a.reduce((x,c)=>x+c.kg,0)*f());mkBatch(cr,+new Date(date+'T18:20:00'),b,b.reduce((x,c)=>x+c.kg,0)*f());continue}
+      const kg=cs.reduce((a,c)=>a+c.kg,0);
+      let k=f();if(d===-4&&cr==='C2')k=0.84;if(d===-1&&cr==='C1')k=0.96;
+      mkBatch(cr,+new Date(date+'T18:30:00'),cs,kg*k,d===-4&&cr==='C2'?'Çəndə su qatı görünür':'');
+    }}
+  // aylıq sabit haqq
+  for(const o of S.objects.filter(o=>o.base==='dovr'&&o.contract!=='pulsuz'))for(const m of [monthStart(addDays(monthStart(TODAY),-1)),monthStart(TODAY)])
+    S.charges.push({id:nid('chg','AH',4),objectId:o.id,period:m.slice(0,7),date:m,contract:o.contract,amount:priceOn(o,m),by:'Ramil Əsədov'});
+  // ödənişlər: həftəlik
+  for(const o of S.objects){if(o.contract==='pulsuz')continue;
+    for(let w=-28;w<=-7;w+=7){const from=addDays(TODAY,w-7),to=addDays(TODAY,w);
+      const sum=Math.abs(ledger(o.id).filter(e=>!e.pay&&e.date>=from&&e.date<to).reduce((a,e)=>a+e.amt,0));if(sum<=0)continue;
+      let amt=o.id==='OB-009'?r2(sum*.6):r2(sum);if(o.id==='OB-001'&&w===-7)amt=r2(amt+20);
+      S.payments.push({id:nid('pay','P',4),date:addDays(to,1),objectId:o.id,dir:o.contract==='biz'?'out':'in',amount:amt,method:R()<.5?'nağd':'köçürmə',ref:'Həftə '+fdy(from)+' – '+fdy(addDays(to,-1)),note:o.id==='OB-001'&&w===-7?'20 ₼ növbəti həftə üçün avans':'',createdAt:+new Date(addDays(to,1)+'T12:00:00')});
+    }}
+  // anbar: başlanğıc qalıq, düzəliş, satış
+  S.stock.opening={date:addDays(TODAY,-31),kg:150,by:'Vüqar Rzayev',note:'İnventar sayımı (başlanğıc qalıq)',at:+new Date(addDays(TODAY,-31)+'T17:00:00')};
+  S.stock.adj.push({id:nid('adj','D',4),date:addDays(TODAY,-15),kg:-3,reason:'İnventar sayımı: çən dibində çöküntü',by:'Ramil Əsədov',at:+new Date(addDays(TODAY,-15)+'T17:00:00')});
+  [[-21,'Biodizel Ekspress MMC',1.05,.7,1],[-11,'Abşeron Sabun Zavodu',.95,.65,.5],[-4,'Biodizel Ekspress MMC',1.05,.6,0]].forEach(([d,buyer,price,share,paid])=>{
+    const date=addDays(TODAY,d),kg=Math.round(stockAt(date)*share),s={id:nid('sale','S',4),date,buyer,kg,price,amount:r2(kg*price),note:''};S.sales.push(s);
+    if(paid)S.buyerPays.push({id:nid('bpay','AÖ',4),date:addDays(date,2),buyer,amount:r2(s.amount*paid),method:'köçürmə',saleId:s.id,note:paid<1?'Qalan hissə ayın 15-nə':''})});
+  // xərclər (ekipajın əsas yığım axınından ayrıca)
+  for(let d=-20;d<=-1;d++){const date=addDays(TODAY,d);
+    for(const cr of ['C1','C2']){if(cr==='C1'&&d<-12)continue;
+      if(d%2===0)S.expenses.push({id:nid('exp','X',4),ts:+new Date(date+'T10:20:00'),date,crewId:cr,car:crew(cr).car,type:'yanacaq',amount:r2(30+R()*16),liters:Math.round(30+R()*12),km:120000+d*80,photo:'yes',status:'təsdiqləndi',note:''});
+      if(R()<.3)S.expenses.push({id:nid('exp','X',4),ts:+new Date(date+'T13:30:00'),date,crewId:cr,car:crew(cr).car,type:'yemek',amount:r2(10+R()*8),photo:R()<.7?'yes':null,status:'təsdiqləndi',note:''})}}
+  S.expenses.push({id:nid('exp','X',4),ts:+new Date(addDays(TODAY,-1)+'T18:40:00'),date:addDays(TODAY,-1),crewId:'C1',car:'10-AB-123',type:'dayanacaq',amount:4,photo:null,status:'gözləyir',note:'Bulvar parkinqi'});
+  for(let d=-20;d<=0;d++){const date=addDays(TODAY,d);if(d%2)continue;S.advances.push({date,crewId:'C2',amount:50});if(d>=-12)S.advances.push({date,crewId:'C1',amount:50})}
+  for(let d=-31;d<0;d++)S.closed[addDays(TODAY,d)]=true;
+  // bu gün
+  const now=Date.now(),sod=+new Date(TODAY+'T00:01:00'),at=min=>Math.max(sod+(200-min),now-min*60e3);
+  const t1=addStop(TODAY,'C1','OB-001','09:00–10:00','Aysel xanıma zəng edin');
+  const t2=addStop(TODAY,'C1','OB-004','10:00–11:00','');
+  addStop(TODAY,'C1','OB-005','11:00–12:30','3 bidon');addStop(TODAY,'C1','OB-003','12:30–14:00','Gecikib, mütləq götürülməli');addStop(TODAY,'C1','OB-002','14:00–15:30','');
+  const u1=addStop(TODAY,'C2','OB-007','09:30–10:30','');addStop(TODAY,'C2','OB-009','11:00–12:00','');addStop(TODAY,'C2','OB-008','13:00–14:30','');
+  const [a1,a2]=atObj('OB-001');
+  sent(newCol({crewId:'C1',ts:at(95),objectId:'OB-001',b:a1,routeId:t1.id,op:'bosaltdi',after:'bos',mode:'olcu',qty:14,unit:'litr',gps:{ok:true,dist:18,acc:9},dur:14000}));
+  sent(newCol({crewId:'C1',ts:at(93),objectId:'OB-001',b:a2,routeId:t1.id,op:'bosaltdi',after:'qaliq',mode:'texmini',fill:'1/2',gps:{ok:true,dist:21,acc:11},dur:11000}));
+  sent(newVisit(t1,'C1',at(91),'tamam',{sign:{name:'Aysel Qasımova',img:null}}));
+  const [k1]=atObj('OB-004');const spare=inCar('C1')[0];
+  sent(newCol({crewId:'C1',ts:at(40),objectId:'OB-004',b:k1,routeId:t2.id,op:'goturdu',mode:'texmini',fill:'dolu',gps:{ok:true,dist:15,acc:8},dur:17000}));
+  moveB(spare,{t:'obyekt',id:'OB-004'},'Boş bidon qoyuldu','Elvin Məmmədov',t2.id,at(38));spare.fill='bos';
+  atObj('OB-007').forEach((b,j)=>sent(newCol({crewId:'C2',ts:at(70-j),objectId:'OB-007',b,routeId:u1.id,op:'bosaltdi',after:'bos',mode:'olcu',qty:j?11.2:13.5,unit:'kq',gps:{ok:true,dist:12+j*5,acc:7},dur:(13+j*3)*1000})));
+  sent(newVisit(u1,'C2',at(66),'tamam'));
+  // gözləyən sorğu
+  const yc=S.collections.filter(c=>c.crewId==='C2'&&c.date===addDays(TODAY,-1)&&c.mode==='olcu')[0];
+  if(yc)S.requests.push({id:nid('req','SR',4),opId:uid(),ts:now-50*60e3,serverTs:now-50*60e3,sync:'gonderilib',crewId:'C2',type:'duzelis',refId:yc.id,bidonId:yc.bidonId,objectId:yc.objectId,reason:`Miqdar səhv yazılıb: ${q1(yc.qty)} yox, ${q1(Math.max(1,yc.qty-4))} ${yc.unit} olmalıdır`,status:'gözləyir'});
+  S.reports.push({no:'SV-2026-0006',objectId:'OB-001',from:monthStart(addDays(monthStart(TODAY),-1)),to:addDays(monthStart(TODAY),-1),version:1,createdAt:+new Date(monthStart(TODAY)+'T10:00:00'),status:'razılaşdırılıb',dispute:'',versions:[]});
+  return S;
+}
+const KEY='yagizi_v4';
+function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.v===4)return s}catch(e){}return null}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function saveSess(){try{localStorage.setItem('yagizi_sess',JSON.stringify({user:U.user,offline:U.offline,gpsMode:U.gpsMode}))}catch(e){}}
+function loadSess(){try{const s=JSON.parse(localStorage.getItem('yagizi_sess'));if(s){const u=users().find(x=>x.id===s.user);if(u&&u.status==='aktiv')U.user=s.user;U.offline=!!s.offline&&!!U.user;U.gpsMode=s.gpsMode||'sim'}}catch(e){}}
+S=load()||seed();
+loadSess();
+
+/* ================= xəbərdarlıqlar ================= */
+function alerts(all){
+  const A=[],since=addDays(TODAY,-14),since3=addDays(TODAY,-3),st=S.settings;
+  const add=(key,lvl,t,d,ref)=>{const s=S.alertSt[key];if(s&&s.closed&&!all)return;A.push({key,lvl,t,d,ref,s})};
+  for(const n of S.notices)add('n:'+n.id,'crit',n.t,n.d,null);
+  for(const b of S.batches){if(b.date<since)continue;const p=b.declared?(b.net-b.declared)/b.declared*100:0;const thr=b.hasEst?st.thrEst:st.thrMeas;
+    if(Math.abs(p)>thr)add('b:'+b.id,'crit','Anbar qəbulunda çəki fərqi',`${b.id} · ${crew(b.crewId).driver}, ${fd(b.date)}: bəyan ${q1(b.declared)} kq, faktiki ${q1(b.net)} kq (${p>0?'+':''}${q1(p)}%; ${b.hasEst?'təxmini daxil, hədd ':'ölçülmüş, hədd '}${thr}%)`,{t:'batch',id:b.id})}
+  for(const c of S.collections){if(!srvRec(c)||c.voided)continue;const o=obj(c.objectId);
+    if(c.conflict)add('cf:'+c.id,'crit','Ziddiyyətli qeyd: eyni bidon',`${c.id} · ${c.bidonId} (${o.name}): ${c.conflict.join(', ')} ilə eyni gündə. Səssizcə birləşdirilmədi.`,{t:'col',id:c.id});
+    if(c.exc&&c.exc.status==='gözləyir')add('ex:'+c.id,'crit','İstisna rəhbər təsdiqi gözləyir',`${c.id} · ${o.name}: ${q1(c.qty)} ${c.unit}, bidon ${c.cap} L. Səbəb: ${c.exc.reason}`,{t:'col',id:c.id});
+    if(c.date<since)continue;
+    if(c.offRoute)add('or:'+c.id,'warn','Marşrutdan kənar yığım',`${c.id} · ${o.name}, ${fdt(c.ts)}. Səbəb: ${c.offRoute}`,{t:'col',id:c.id});
+    if(c.second)add('2:'+c.id,'warn','Eyni səfərdə ikinci yığım',`${c.id} · ${c.bidonId}. Səbəb: ${c.second}`,{t:'col',id:c.id});
+    if(c.manual)add('m:'+c.id,'warn','Bidon kodu əl ilə daxil edilib',`${c.id} · ${c.bidonId}, ${o.name}, ${fdt(c.ts)}`,{t:'col',id:c.id});
+    if(c.gps&&c.gps.ok&&c.gps.dist>200)add('g:'+c.id,'warn','Obyektdən uzaqda qeyd',`${c.id} · ${o.name}: ${c.gps.dist} m məsafədən`,{t:'col',id:c.id});
+    if((!c.gps||!c.gps.ok)&&c.date>=since3)add('ng:'+c.id,'warn','GPS alınmadı',`${c.id} · ${o.name}, ${fdt(c.ts)}. Mövqe yoxlama siqnalıdır, tək sübut deyil.`,{t:'col',id:c.id});
+    if(c.serverTs&&c.serverTs-c.ts>st.late*6e4)add('l:'+c.id,'warn','Gec göndərilib',`${c.id} · telefonda ${fdt(c.ts)}, serverdə ${fdt(c.serverTs)} (${Math.round((c.serverTs-c.ts)/6e4)} dəq)`,{t:'col',id:c.id});
+    if(c.quality==='problem')add('q:'+c.id,'warn','Keyfiyyət problemi',`${c.id} · ${o.name}: ${PROB[c.prob?.type]||'—'}${c.prob?.note?', '+c.prob.note:''}`,{t:'col',id:c.id});
+  }
+  for(const o of S.objects){if(o.status!=='aktiv')continue;const l=COLS().filter(c=>c.objectId===o.id).reduce((a,c)=>!a||c.ts>a.ts?c:a,null);const n=l?diffDays(TODAY,l.date):99;
+    if(n>o.freq+2)add('o:'+o.id+':'+TODAY,'warn','Yığım gecikir',`${o.name}: ${n} gündür götürülməyib (razılaşma: ${o.freq} gündə bir)`,{t:'obj',id:o.id})}
+  for(const b of S.bidons)if(b.cond==='itib'||b.cond==='zedeli')add('bc:'+b.id+':'+b.cond,'warn',b.cond==='itib'?'Bidon itib':'Bidon zədəlidir',`${b.id} · ${locTxt(b.loc)}`,{t:'bidon',id:b.id});
+  for(const r of S.requests)if(srvRec(r)&&r.status==='gözləyir')add('r:'+r.id,'warn',REQ_T[r.type]+' gözləyir',`${crew(r.crewId)?.driver||'—'}: ${r.reason}`,{t:'req',id:r.id});
+  return A.sort((a,b)=>(a.lvl==='crit'?0:1)-(b.lvl==='crit'?0:1));
+}
+const pendReq = () => S.requests.filter(r=>srvRec(r)&&r.status==='gözləyir').length;
+
+/* ================= ikonlar ================= */
+const ICON={
+  drop:'<svg class="drop" viewBox="0 0 24 24" fill="none"><path d="M12 2.5c3.6 4.6 6.5 8.2 6.5 11.6A6.5 6.5 0 0 1 5.5 14c0-3.4 2.9-7 6.5-11.5z" fill="var(--accent)"/><path d="M9 15.5a3 3 0 0 0 3 3" stroke="var(--on-deep)" stroke-width="1.6" stroke-linecap="round"/></svg>',
+  qr:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8V4h4M17 4h4v4M21 16v4h-4M7 20H3v-4"/><rect x="7" y="7" width="4" height="4"/><rect x="13" y="13" width="4" height="4"/><path d="M13 7h4v2M7 15v2h2"/></svg>'
+};
+function gauge(f){return `<span class="gauge"><i style="height:${FILL[f]*100}%"></i></span>`}
+
+/* ================= qabıq ================= */
+const NAV=[['panel','Panel'],['emel','Əməliyyatlar'],['obyekt','Obyektlər və bidonlar'],['maliyye','Maliyyə'],['hesabat','Hesabatlar'],['istifadeci','İstifadəçilər']];
+const SUBNAV={emel:[['yigim','Yığımlar'],['marsrut','Marşrut'],['ziyaret','Obyekt ziyarətləri'],['qebul','Anbar qəbulları'],['sorgu','Sorğular']],
+  obyekt:[['obyektler','Obyektlər'],['bidonlar','Bidonlar və QR'],['hereket','Bidon hərəkətləri']],
+  maliyye:[['hesab','Hesablaşma'],['odenis','Ödəniş jurnalı'],['anbar','Anbar qalığı və satış'],['xerc','Xərclər']],
+  hesabat:[['sverka','Sverka'],['ixrac','İxrac (CSV/Excel)'],['ehtiyat','Ehtiyat nüsxə'],['ayar','Tənzimləmələr']]};
+
+function render(){
+  const u=me();
+  const pub=new URLSearchParams(location.search).get('b');
+  if(!u){document.getElementById('app').innerHTML=pub?vPublic(pub):vLogin();renderModal();return}
+  let body='';
+  const top=`<header class="top"><div class="top-in"><div class="brand">${ICON.drop}<div>Yağ İzi<br><small>Atıq yağ yığımı · QR izləmə</small></div></div><div class="sp"></div>
+    <div class="who"><span>${esc(u.name)} · ${u.role==='admin'?'Rəhbər':u.role==='anbar'?'Anbar məsulu':'Ekipaj'}</span><button class="btn sm ghost" style="color:var(--on-deep);border-color:color-mix(in srgb,var(--on-deep) 30%,transparent)" data-a="logout">Çıxış</button></div></div>
+    ${u.role==='admin'?`<nav class="nav">${NAV.map(([k,l])=>{const n=k==='panel'?alerts().length:k==='emel'?pendReq():0;return `<button data-a="nav" data-v="${k}" class="${U.view===k?'on':''}">${l}${n?`<span class="cnt">${n}</span>`:''}</button>`}).join('')}</nav>`:''}</header>`;
+  const demo=u.role==='admin'?`<div class="demo"><div class="in"><span>Prototip: məlumat bu brauzerdə saxlanır. Real sistemdə mərkəzi server, server üzrə icazə yoxlaması və gündəlik ehtiyat nüsxə tələb olunur.</span><button class="btn sm ghost" data-a="reset">Nümunəni sıfırla</button></div></div>`:'';
+  if(u.role==='admin')body=({panel:vPanel,emel:vEmel,obyekt:vObyekt,maliyye:vMaliyye,hesabat:vHesabat,istifadeci:vUsers}[U.view]||vPanel)();
+  else if(u.role==='anbar')body=vWarehouse();
+  else body=vDriver(u.id);
+  document.getElementById('app').innerHTML=top+demo+body;
+  renderModal(); afterRender();
+}
+function subnav(v){return `<div class="subnav">${SUBNAV[v].map(([k,l])=>{const n=k==='sorgu'?pendReq():0;return `<button data-a="sub" data-v="${v}" data-k="${k}" class="${U.sub[v]===k?'on':''}">${l}${n?`<span class="cnt">${n}</span>`:''}</button>`}).join('')}</div>`}
+function qrEl(code){return `<div class="qr" data-q="${esc(QR_BASE+'?b='+encodeURIComponent(code))}"></div>`}
+function afterRender(){
+  document.querySelectorAll('.qr[data-q]').forEach(el=>{if(el.childNodes.length||typeof QRCode==='undefined')return;
+    try{new QRCode(el,{text:el.dataset.q,width:208,height:208,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M})}catch(e){el.textContent=el.dataset.q}});
+}
+function toast(m){U.toast=m;const t=document.getElementById('toast');t.innerHTML=`<div class="toast" role="status">${esc(m)}</div>`;clearTimeout(toast._t);toast._t=setTimeout(()=>{t.innerHTML=''},3200)}
+function openModal(m){stopCam();U.modal=m;renderModal()}
+function closeModal(){stopCam();U.modal=null;U.form=null;renderModal()}
+const MODALS={};
+function renderModal(){
+  const el=document.getElementById('modal'); if(!U.modal){el.innerHTML='';return}
+  const fn=MODALS[U.modal.type];
+  el.innerHTML=`<div class="scrim" data-a="scrim"><div class="modal ${U.modal.wide?'wide':''}" role="dialog" aria-modal="true">${fn()}</div></div>`;
+  const cv=document.getElementById('sig'); if(cv)initSig(cv);
+  el.querySelectorAll('.qr[data-q]').forEach(q=>{if(!q.childNodes.length&&typeof QRCode!=='undefined')new QRCode(q,{text:q.dataset.q,width:208,height:208,correctLevel:QRCode.CorrectLevel.M})});
+}
+const mh=(t,sub)=>`<div class="mhead"><div><h2>${t}</h2>${sub?`<div class="muted small">${sub}</div>`:''}</div><button class="x" data-a="close" aria-label="Bağla">×</button></div>`;
+const errBox=e=>e?`<div class="warnbox" role="alert">${esc(e)}</div>`:'';
+
+/* ================= giriş ================= */
+function vLogin(){const L=U.login;
+  return `<header class="top"><div class="top-in"><div class="brand">${ICON.drop}<div>Yağ İzi<br><small>Atıq yağ yığımı · QR izləmə</small></div></div></div></header>
+  <main class="login"><section class="card"><h2>Giriş</h2><p class="small muted" style="margin:0">Hər istifadəçinin ayrıca hesabı var. Bağlanmış hesabla giriş və yeni qeyd qəbul edilmir.</p>
+   <label class="field"><span>İstifadəçi</span><select id="lgUser">${users().map(x=>`<option value="${x.id}" ${x.id===L.id?'selected':''}>${esc(x.label)}${x.status!=='aktiv'?' (bağlı)':''}</option>`).join('')}</select></label>
+   <label class="field"><span>PIN</span><input type="password" inputmode="numeric" autocomplete="current-password" id="lgPin" maxlength="8"></label>
+   ${errBox(L.err)}<button class="btn pri" data-a="login">Daxil ol</button></section>
+   <div class="card flat small muted">Sınaq PIN-ləri: Rəhbər 1111 · Anbar 2222 · Elvin 3333 · Tural 4444 · Kamran 5555 (bağlı hesab). Real sistemdə giriş və icazələr serverdə yoxlanılır.</div></main>`}
+function vPublic(code){const b=bid(normCode(code));
+  return `<main class="login"><section class="card" style="text-align:center;justify-items:center"><div class="logo">${ICON.drop}</div><h2>${esc(S.company)}</h2>
+   <p>Bu bidon ${esc(S.company)} şirkətinə məxsusdur${b?` (kod <b class="mono">${esc(b.id)}</b>)`:''}.</p><p>Tapdınızsa zəng edin: <a href="tel:${S.phone.replace(/\s/g,'')}">${esc(S.phone)}</a></p>
+   <p class="small muted">QR kodu oxumaq sistemə giriş vermir. Obyekt, miqdar, qiymət və tarixçə yalnız girişdən sonra görünür.</p>
+   <a class="btn" href="${location.pathname}">İşçi girişi</a></section></main>`}
+
+/* ================= EKİPAJ ================= */
+function vDriver(cid){
+  const c=crew(cid);
+  const stops=stopsOf(TODAY,cid),done=stops.filter(s=>['tamam','goturulmedi'].includes(stopState(s))||(visitOf(s))).length;
+  const pend=pendingSync(cid);const d=new Date();
+  const head=`<div class="dhead"><span class="lbl">${d.getDate()} ${MONTHS[d.getMonth()]}, ${['bazar','bazar ertəsi','çərşənbə axşamı','çərşənbə','cümə axşamı','cümə','şənbə'][d.getDay()]}</span>
+    <h2>Salam, ${esc(c.driver.split(' ')[0])}</h2><span class="muted small">${esc(c.car)} · köməkçi ${esc(c.helper)} · ${done}/${stops.length} obyekt · nəqliyyatda ${inCar(cid).length} bidon</span></div>
+  <div class="netbar ${U.offline?'off':''}"><span>${U.offline?`İnternet yoxdur. Telefonda saxlanan: <b>${pend.length}</b>`:pend.length?`Göndərilir: ${pend.length}`:'İnternet var, hamısı göndərilib'}</span>
+    <span class="row" style="gap:6px"><span class="small">İnternet (sınaq)</span><button class="switch ${U.offline?'':'on'}" data-a="net" aria-label="İnterneti söndür və ya yandır"></button></span></div>
+  <div class="row small" style="justify-content:space-between"><span class="muted">GPS:</span><div class="seg">${[['sim','Sınaq'],['real','Telefon'],['yox','Yoxdur']].map(([k,l])=>`<button class="${U.gpsMode===k?'on':''}" data-a="gpsMode" data-k="${k}">${l}</button>`).join('')}</div></div>
+  <button class="scan" data-a="scan">${ICON.qr} QR oxut</button>
+  <div class="ctabs" role="tablist"><button class="${U.ctab==='route'?'on':''}" data-a="ctab" data-k="route" role="tab">Marşrutum</button><button class="${U.ctab==='mine'?'on':''}" data-a="ctab" data-k="mine" role="tab">Qeydlərim${pend.length?`<span class="cnt">${pend.length}</span>`:''}</button></div>`;
+  return `<div class="phone">${head}${U.ctab==='mine'?vMine(cid):vMyRoute(cid,stops)}</div>`;
+}
+function vMyRoute(cid,stops){
+  if(!stops.length)return `<div class="card flat empty">Bu gün üçün marşrut təyin edilməyib.</div>`;
+  return stops.map(s=>{const o=obj(s.objectId),st=stopState(s),v=visitOf(s),cnt=stopCount(s),open=!v;
+    return `<div class="stop ${v?'done':''}"><div class="stop-top"><span class="seq">${s.seq}</span>
+      <div><b>${esc(o.name)}</b><div class="small muted">${esc(o.address)} · ${esc(s.win)}</div>
+      ${o.access?`<div class="small">Giriş: ${esc(o.access)}</div>`:''}${s.note?`<div class="small">Qeyd: ${esc(s.note)}</div>`:''}
+      <div class="small muted">${esc(o.contact)} · ${cnt.exp.length} bidon${cnt.rec.length?` · ${cnt.rec.length} qeyd edildi`:''}</div>
+      ${v&&v.status==='goturulmedi'?`<div class="small">Səbəb: ${esc(v.skip)}</div>`:''}${v&&Object.keys(v.left).length?`<div class="small">${Object.entries(v.left).map(([b,r])=>`${b}: ${esc(r)}`).join('; ')}</div>`:''}</div>
+      ${stPill(st,open)}</div>
+      ${open?`<div class="stop-acts"><a class="btn" href="tel:${o.phone.replace(/\s/g,'')}">Zəng et</a><a class="btn" href="https://www.google.com/maps/search/?api=1&query=${o.lat},${o.lng}" target="_blank" rel="noopener">Xəritədə aç</a>
+        <button class="btn pri full" data-a="scan" data-o="${o.id}">${ICON.qr.replace('<svg','<svg width="20" height="20"')} QR oxut</button>
+        ${cnt.rec.length?`<button class="btn dark full" data-a="done" data-r="${s.id}">Obyektdə işi tamamla (${cnt.exp.length} bidondan ${cnt.rec.length}-i qeyd edildi)</button>`:`<button class="btn full" data-a="skip" data-r="${s.id}">Götürülmədi</button>`}</div>`:''}</div>`}).join('');
+}
+function canEdit(c){return !c.batchId&&!c.voided&&c.sync!=='redd'&&Date.now()-c.ts<S.settings.editMin*6e4}
+function vMine(cid){
+  const cs=S.collections.filter(x=>x.crewId===cid&&x.date===TODAY).sort((a,b)=>b.ts-a.ts);
+  const vs=S.visits.filter(x=>x.crewId===cid&&x.date===TODAY).sort((a,b)=>b.ts-a.ts);
+  const rq=S.requests.filter(x=>x.crewId===cid&&x.ts>Date.now()-3*864e5).sort((a,b)=>b.ts-a.ts);
+  const exps=S.expenses.filter(e=>e.date===TODAY&&e.crewId===cid);
+  const pend=pendingSync(cid);
+  return `${pend.length?`<div class="warnbox">${pend.length} qeyd hələ serverə çatmayıb. Səhifəni bağlasanız da itməyəcək; internet gələndə bir dəfə göndəriləcək.</div>`:''}
+  <h3>Bu gün etdiyim yığımlar</h3>
+  ${cs.length?`<div class="list">${cs.map(x=>{const left=Math.max(0,S.settings.editMin-Math.floor((Date.now()-x.ts)/6e4));
+    return `<div class="li ${x.voided?'strike':''}"><div><b>${esc(obj(x.objectId).name)}</b> <span class="mono small">${x.bidonId}</span>
+     <div class="small muted">${ft(x.ts)} · ${OP_S[x.op]} · ${esc(qtyTxt(x))} ${x.mode==='olcu'?'(ölçülmüş)':'(təxmini)'}${x.quality==='problem'?' · problem: '+PROB[x.prob?.type]:''}</div>
+     <div class="flags row" style="gap:4px;margin-top:4px">${syncPill(x.sync)}${x.batchId?'<span class="pill ok">Anbar qəbul edib</span>':''}${x.edits.length?`<span class="pill acc">düzəldilib ×${x.edits.length}</span>`:''}${!x.gps?.ok?'<span class="pill warn">GPS alınmadı</span>':''}</div></div>
+     <div class="row" style="gap:6px">${canEdit(x)?`<button class="btn sm" data-a="editMine" data-id="${x.id}">Düzəlt (${left} dəq)</button>`:x.voided?'':`<button class="btn sm" data-a="askFix" data-id="${x.id}">Düzəliş istə</button>`}
+     ${x.sync==='gonderilib'?`<button class="btn sm ghost" data-a="resend" data-id="${x.id}" title="Eyni qeydi yenidən göndərmək sınağı">Yenidən göndər</button>`:''}</div></div>`}).join('')}</div>`:`<div class="card flat empty small">Hələ qeyd yoxdur. Bidonun QR-ını oxudun.</div>`}
+  ${vs.length?`<h3>Obyekt yekunları</h3><div class="list">${vs.map(v=>`<div class="li"><div><b>${esc(obj(v.objectId).name)}</b><div class="small muted">${ft(v.ts)} · ${VST[v.status]}${v.skip?' · '+esc(v.skip):''}${v.sign?' · təsdiq: '+esc(v.sign.name):v.noRep?' · nümayəndə yox: '+esc(v.noRep):''}</div></div>${syncPill(v.sync)}</div>`).join('')}</div>`:''}
+  ${rq.length?`<h3>Sorğularım</h3><div class="list">${rq.map(r=>`<div class="li"><div><b>${REQ_T[r.type]}</b><div class="small muted">${fdt(r.ts)} · ${esc(r.reason)}</div>${r.answer?`<div class="small">Rəhbər: ${esc(r.answer)}</div>`:''}</div><span class="pill ${r.status==='təsdiqləndi'?'ok':r.status==='rədd edildi'?'crit':''}">${r.status}</span></div>`).join('')}</div>`:''}
+  <section class="card flat"><div class="row" style="justify-content:space-between"><h3>Xərclər (ayrıca uçot)</h3><button class="btn sm" data-a="expNew">+ Xərc</button></div>
+   ${exps.length?`<div class="list">${exps.map(e=>`<div class="li"><div><b>${EXP_T[e.type]}</b> <span class="num">${money(e.amount)}</span><div class="small muted">${ft(e.ts)}${e.liters?' · '+e.liters+' L':''}${e.photo?' · çek var':' · çeksiz'}</div></div>${stExp(e.status)}</div>`).join('')}</div>`:'<div class="small muted">Bu gün xərc yazılmayıb.</div>'}</section>
+  <p class="small muted">Göndərilən qeyd silinmir. Anbar qəbulundan əvvəl ${S.settings.editMin} dəqiqə ərzində özünüz düzəldə bilərsiniz, sonra “Düzəliş istə” ilə səbəb göndərin. Qiymət və maliyyə məlumatı ekipaja göstərilmir.</p>`;
+}
+const stExp=s=>s==='təsdiqləndi'?'<span class="pill ok">Təsdiqləndi</span>':s==='rədd edildi'?'<span class="pill crit">Rədd edildi</span>':'<span class="pill">Gözləyir</span>';
+
+/* ---------- QR oxuma ---------- */
+let CAM=null;
+function loadJsQR(){return new Promise(res=>{if(window.jsQR)return res();const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js';s.onload=()=>res();s.onerror=()=>res();document.head.appendChild(s)})}
+function stopCam(){if(CAM){cancelAnimationFrame(CAM.raf);CAM.st.getTracks().forEach(t=>t.stop());CAM=null}}
+async function camOn(){
+  const m=U.modal;
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){m.camErr='Bu brauzerdə kamera əlçatan deyil. Kodu əl ilə yazın.';renderModal();return}
+  try{
+    const st=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'},audio:false});
+    if(!U.modal||U.modal!==m){st.getTracks().forEach(t=>t.stop());return}
+    m.cam=true;m.camErr=null;renderModal();CAM={st,raf:0};
+    const v=document.getElementById('camV');v.srcObject=st;v.setAttribute('playsinline','');await v.play();
+    let det=null;if('BarcodeDetector' in window){try{det=new BarcodeDetector({formats:['qr_code']})}catch(e){}}
+    if(!det)await loadJsQR();
+    const cv=document.createElement('canvas'),ctx=cv.getContext('2d',{willReadFrequently:true});
+    const tick=async()=>{if(!CAM)return;
+      try{if(v.readyState>=2){let txt=null;
+        if(det){const r=await det.detect(v);if(r&&r[0])txt=r[0].rawValue}
+        else if(window.jsQR){cv.width=v.videoWidth;cv.height=v.videoHeight;ctx.drawImage(v,0,0);const im=ctx.getImageData(0,0,cv.width,cv.height);const r=jsQR(im.data,im.width,im.height,{inversionAttempts:'dontInvert'});if(r)txt=r.data}
+        if(txt){if(navigator.vibrate)navigator.vibrate(60);handleCode(txt,false);return}}}catch(e){}
+      if(CAM)CAM.raf=requestAnimationFrame(tick)};
+    tick();
+  }catch(e){m.cam=false;m.camErr='Kamera açılmadı (icazə verilməyib və ya kamera yoxdur). Kodu əl ilə yazın.';stopCam();renderModal()}
+}
+MODALS.scan=function(){
+  const m=U.modal,cid=U.user;
+  if(m.res)return scanResult(m);
+  const place=m.mode==='place';
+  const stops=stopsOf(TODAY,cid).filter(r=>!visitOf(r));
+  const demo=place?inCar(cid):S.bidons.filter(b=>b.loc.t==='obyekt'&&(m.o?b.loc.id===m.o:stops.some(r=>r.objectId===b.loc.id))&&b.cond!=='itib');
+  const tricky=place?[]:[S.bidons.find(b=>b.loc.t==='obyekt'&&!stops.some(r=>r.objectId===b.loc.id)&&b.cond==='normal'),S.bidons.find(b=>b.cond==='itib')].filter(Boolean);
+  return mh(place?'Boş bidonu oxut':'Bidonu oxut',place?`${esc(obj(m.o).name)} · obyektə qoyulan boş bidon`:m.o?esc(obj(m.o).name):'Kameranı stikerdəki QR-a tutun')+
+  `<div class="box" style="justify-items:center;text-align:center">
+    ${m.cam?`<video id="camV" class="cam" muted playsinline aria-label="Kamera görüntüsü"></video><div class="small muted">QR çərçivəyə düşəndə avtomatik oxunur.</div><button class="btn" data-a="camOff">Kameranı bağla</button>`
+      :`<button class="scan" data-a="camOn">${ICON.qr} Kameranı aç</button>`}
+    ${errBox(m.camErr)}</div>
+  ${demo.length?`<div class="field"><span>Sınaq: stikerə toxunmaq QR oxunmasını təqlid edir</span><div class="chips">${demo.map(b=>`<button class="chip" data-a="pickBid" data-b="${b.id}">${b.id}</button>`).join('')}</div></div>`:place?'<div class="warnbox">Nəqliyyatınızda boş bidon qeydə alınmayıb.</div>':''}
+  ${tricky.length?`<div class="field"><span>Sınaq: istisna halları</span><div class="chips">${tricky.map(b=>`<button class="chip" data-a="pickBid" data-b="${b.id}">${b.id} · ${b.cond==='itib'?'itmiş':'başqa obyekt'}</button>`).join('')}<button class="chip" data-a="pickBid" data-b="YAĞ-9999">YAĞ-9999 · naməlum</button></div></div>`:''}
+  <div class="field"><span>QR oxunmur? Stikerdəki kodu yazın</span><div class="row"><input type="text" id="manId" placeholder="YAĞ-0007" style="flex:1" autocomplete="off" autocapitalize="characters"><button class="btn dark" data-a="manBid">Aç</button></div>
+  <span class="small muted">Əl ilə açılan qeyd “əl ilə daxil edilib” kimi işarələnir.</span></div>`;
+}
+function handleCode(raw,manual){
+  stopCam();const m=U.modal,cid=U.user;if(!m)return;m.cam=false;
+  const code=normCode(raw),b=bid(code);
+  if(!b){m.res={kind:'unknown',code,manual};renderModal();return}
+  if(m.mode==='place'){
+    if(!(b.loc.t==='neqliyyat'&&b.loc.id===cid)||b.cond!=='normal'){m.res={kind:'notMine',b,manual};renderModal();return}
+    const r=S.routes.find(x=>x.id===m.r);moveB(b,{t:'obyekt',id:m.o},'Boş bidon qoyuldu',crew(cid).driver,m.r);b.fill='bos';b.clean=null;save();
+    m.res={kind:'placed',b};renderModal();return;
+  }
+  if(b.cond==='itib'||b.cond==='dayan'){m.res={kind:'blocked',b,manual};renderModal();return}
+  if(b.loc.t!=='obyekt'){m.res={kind:'notAtObj',b,manual};renderModal();return}
+  const stops=stopsOf(TODAY,cid),stop=stops.find(r=>r.objectId===b.loc.id&&!visitOf(r));
+  if(m.o&&m.o!==b.loc.id){m.res={kind:'otherObj',b,manual,at:m.o,stop};renderModal();return}
+  if(!stop){m.res={kind:'offRoute',b,manual};renderModal();return}
+  const prev=S.collections.find(c=>c.bidonId===b.id&&c.routeId===stop.id&&!c.voided);
+  if(prev){m.res={kind:'repeat',b,prev,manual,stop};renderModal();return}
+  startCol(b,stop,manual,{});
+}
+function scanResult(m){const R=m.res,b=R.b;
+  const back=`<button class="btn" data-a="scanBack">Yenidən oxut</button>`;
+  if(R.kind==='placed')return mh('Boş bidon qoyuldu',esc(obj(b.loc.id).name))+`<div class="done-ok"><span class="big">✓</span><b>${b.id} obyektə qoyuldu</b><span class="small">Ayrıca hərəkət kimi yazıldı: nəqliyyat → ${esc(obj(b.loc.id).name)}</span></div>
+    <div class="row"><button class="btn pri" data-a="scan" data-o="${b.loc.id}">Növbəti bidonu oxut</button><button class="btn" data-a="close">Bağla</button></div>`;
+  if(R.kind==='unknown')return mh('Naməlum kod','')+`<div class="warnbox"><b>“${esc(R.code)}”</b> kodu sistemdə yoxdur. Yeni bidon avtomatik yaradılmır.</div>
+    <label class="field"><span>Qeyd (rəhbər üçün)</span><input type="text" id="rqNote" placeholder="məs. stiker təzədir, obyektdə tapıldı"></label>
+    <div class="row"><button class="btn pri" data-a="reqRaise" data-t="namelum">Rəhbərə bildir</button>${back}</div>`;
+  if(R.kind==='notMine')return mh('Bu bidon qoyula bilməz',b.id)+`<div class="warnbox">${b.id} hazırda: <b>${esc(locTxt(b.loc))}</b>, vəziyyəti: ${COND[b.cond]}. Obyektə yalnız nəqliyyatınızdakı normal boş bidon qoyulur.</div><div class="row">${back}<button class="btn" data-a="close">Bağla</button></div>`;
+  if(R.kind==='blocked')return mh('Bu bidonla yığım yazılmır',b.id)+`<div class="warnbox">${b.id} sistemdə <b>${COND[b.cond]}</b> kimi qeyddədir. Aidiyyəti və vəziyyəti özünüz dəyişə bilməzsiniz.</div>
+    <label class="field"><span>Rəhbərə qeyd</span><input type="text" id="rqNote" placeholder="məs. bidon ${esc(obj(m.o||'')?.name||'obyektdə')} tapıldı"></label>
+    <div class="row"><button class="btn pri" data-a="reqRaise" data-t="aidiyyet">Rəhbərə sorğu göndər</button>${back}</div>`;
+  if(R.kind==='notAtObj')return mh('Bidon obyektdə qeydiyyatda deyil',b.id)+`<div class="warnbox">${b.id} hazırda: <b>${esc(locTxt(b.loc))}</b>. Bu bidonla obyekt yığımı yazılmır.</div>
+    <label class="field"><span>Rəhbərə qeyd</span><input type="text" id="rqNote"></label><div class="row"><button class="btn pri" data-a="reqRaise" data-t="aidiyyet">Rəhbərə sorğu göndər</button>${back}</div>`;
+  if(R.kind==='otherObj'){const here=obj(R.at),there=obj(b.loc.id);const thereStop=stopsOf(TODAY,U.user).find(r=>r.objectId===there.id&&!visitOf(r));
+    return mh('Bidon başqa obyektə bağlıdır',b.id)+`<div class="warnbox">${b.id} sistemdə <b>${esc(there.name)}</b> obyektinə bağlıdır, siz isə <b>${esc(here.name)}</b> üzrə oxudunuz. Aidiyyəti özünüz dəyişə bilməzsiniz.</div>
+    <label class="field"><span>Rəhbərə qeyd</span><input type="text" id="rqNote" value="Bidon ${esc(here.name)} obyektində tapıldı"></label>
+    <div class="row"><button class="btn pri" data-a="reqRaise" data-t="aidiyyet">Rəhbərə sorğu göndər</button>${thereStop?`<button class="btn" data-a="asOwner">${esc(there.name)} üçün yaz</button>`:''}${back}</div>
+    ${U.offline?'<div class="small muted">İnternet yoxdur: sorğu telefonda saxlanır və yoxlama üçün göndəriləcək. Aidiyyət dəyişməsi edilmir.</div>':''}`}
+  if(R.kind==='offRoute')return mh('Marşrutdan kənar',b.id+' · '+esc(obj(b.loc.id).name))+`<div class="warnbox">${esc(obj(b.loc.id).name)} bugünkü marşrutunuzda deyil (və ya artıq tamamlanıb). Marşrutdan kənar yığım ayrıca səbəb ilə yazılır və rəhbər yoxlayır.</div>
+    <label class="field"><span>Səbəb (məcburi)</span><input type="text" id="offWhy" placeholder="məs. obyekt zəng edib çağırdı"></label>${errBox(m.err)}
+    <div class="row"><button class="btn pri" data-a="offGo">Səbəblə davam et</button>${back}</div>`;
+  if(R.kind==='repeat'){const p=R.prev;return mh('Bu bidon artıq qeyd olunub',b.id)+`<div class="box"><b>Əvvəlki qeyd · ${ft(p.ts)}</b><div class="small">${OP_S[p.op]} · ${esc(qtyTxt(p))} ${p.mode==='olcu'?'(ölçülmüş)':'(təxmini)'}</div><div>${syncPill(p.sync)}</div></div>
+    <div class="row">${canEdit(p)?`<button class="btn pri" data-a="editMine" data-id="${p.id}">Əvvəlki qeydi düzəlt</button>`:''}<button class="btn" data-a="close">Bağla</button></div>
+    <details class="box"><summary class="small"><b>Bu həqiqətən ikinci yığımdır</b></summary><label class="field" style="margin-top:8px"><span>Səbəb (məcburi)</span><input type="text" id="secWhy" placeholder="məs. obyekt ikinci dəfə doldurdu"></label>${errBox(m.err)}<button class="btn dark" data-a="secondGo">Ayrıca hadisə kimi aç</button></details>`}
+  return '';
+}
+function requestGps(F){
+  const o=obj(F.objectId);
+  if(U.gpsMode==='yox'){F.gps={ok:false};return}
+  if(U.gpsMode==='sim'){const far=Math.random()<.08;F.gps={ok:true,dist:far?Math.round(220+Math.random()*300):Math.round(6+Math.random()*50),acc:Math.round(5+Math.random()*18),sim:true};return}
+  if(!navigator.geolocation){F.gps={ok:false};return}
+  F.gps={pending:true};
+  navigator.geolocation.getCurrentPosition(p=>{if(U.form!==F)return;F.gps={ok:true,dist:Math.round(hav(p.coords.latitude,p.coords.longitude,o.lat,o.lng)),acc:Math.round(p.coords.accuracy)};const el=document.getElementById('gpsS');if(el)el.textContent=gpsTxt(F.gps)},
+    ()=>{if(U.form!==F)return;F.gps={ok:false};const el=document.getElementById('gpsS');if(el)el.textContent='GPS alınmadı'},{enableHighAccuracy:true,timeout:8000,maximumAge:60000});
+}
+function startCol(b,stop,manual,x){
+  const o=obj(b.loc.id);
+  U.form={mode:'new',opId:uid(),bidonId:b.id,objectId:o.id,routeId:stop?stop.id:null,manual:!!manual,op:'bosaltdi',after:'bos',meas:'texmini',fill:null,qty:'',
+    unit:o.base==='litr'?'litr':'kq',useScale:false,gross:'',tare:String(b.tare),quality:'normal',prob:null,probNote:'',photo:null,exc:false,excReason:'',
+    offRoute:x.offRoute||null,second:x.second||null,t0:Date.now(),gps:null,err:null,saved:null,saving:false};
+  requestGps(U.form);
+  U.modal={type:'col'};renderModal();
+}
+MODALS.col=function(){
+  const F=U.form,b=bid(F.bidonId),o=obj(F.objectId);
+  if(F.saved)return colSaved(F);
+  const edit=F.mode==='edit';
+  const est=F.fill?FILL[F.fill]*b.cap:0;
+  const net=F.useScale&&F.gross!==''?r1(+F.gross-(+F.tare||0)):null;
+  const qn=F.useScale?net:(F.qty===''?null:+F.qty), qu=F.useScale?'kq':F.unit;
+  const over=F.meas==='olcu'&&qn>0&&conv(qn,qu,'litr')>b.cap*1.02;
+  return mh(esc(o.name),`<span class="mono">${b.id}</span> · ${b.cap} L · ${esc(o.address)}`)+
+  `<div class="row" style="gap:4px">${F.manual?'<span class="pill warn">əl ilə daxil edilib</span>':''}${F.offRoute?'<span class="pill warn">marşrutdan kənar</span>':''}${F.second?'<span class="pill warn">ikinci yığım</span>':''}${b.cond==='zedeli'?'<span class="pill warn">bidon zədəli</span>':''}${edit?'<span class="pill acc">düzəliş</span>':''}<span class="small muted">Obyekt, kod və tutum QR-dan avtomatik götürüldü.</span></div>
+  <div class="field"><span>1. Əməliyyat</span><div class="opts">${Object.entries(OP).map(([k,l])=>`<button class="opt ${F.op===k?'on':''}" data-a="op" data-k="${k}" ${edit?'disabled':''}><span class="dot"></span>${l}</button>`).join('')}</div>
+   ${F.op==='bosaltdi'?`<div class="row small" style="margin-top:4px"><span class="muted">Yığımdan sonra bidon:</span><div class="seg">${Object.entries(AFTER).map(([k,l])=>`<button class="${F.after===k?'on':''}" data-a="after" data-k="${k}">${l}</button>`).join('')}</div></div>`:`<div class="small muted">Bidon nəqliyyata keçir və anbar qəbuluna qədər “yoldadır” görünür. Yerinə boş bidon qoysanız, saxladıqdan sonra onun QR-ını oxudun.</div>`}</div>
+  <div class="field"><span>2. Miqdar</span><div class="seg" role="tablist">${[['texmini','Təxmini (doluluq)'],['olcu','Ölçülmüş']].map(([k,l])=>`<button class="${F.meas===k?'on':''}" data-a="meas" data-k="${k}">${l}</button>`).join('')}</div>
+   ${F.meas==='texmini'?`<div class="fills">${FILL_KEYS.map(k=>`<button class="fill ${F.fill===k?'on':''}" data-a="fill" data-k="${k}">${gauge(k)}${FILL_LBL[k]}</button>`).join('')}</div>
+     <div class="small muted">${F.fill?`Təxmini: ≈ ${q1(est)} L ≈ ${q1(est*DENS)} kq (${FILL_LBL[F.fill]} × ${b.cap} L × ${DENS}). Təxmini miqdar yekun hesab yaratmır.`:'Doluluğu seçin.'}</div>`
+   :`${F.useScale?`<div class="form"><label class="field"><span>Ümumi çəki, kq</span><input type="number" inputmode="decimal" step="0.1" min="0" id="fGross" data-f="gross" value="${esc(F.gross)}"></label>
+       <label class="field"><span>Boş bidon çəkisi, kq</span><input type="number" inputmode="decimal" step="0.1" min="0" id="fTare" data-f="tare" value="${esc(F.tare)}"></label></div>
+       <div class="small">Xalis yağ = ümumi − boş bidon = <b id="netS">${net!=null?q1(net)+' kq':'—'}</b></div>`
+     :`<div class="row"><input type="number" inputmode="decimal" step="0.1" min="0" id="fQty" data-f="qty" value="${esc(F.qty)}" placeholder="məs. 14.5" style="flex:1" aria-label="Ölçülmüş miqdar">
+       <div class="seg">${['kq','litr'].map(u=>`<button class="${F.unit===u?'on':''}" data-a="unit" data-u="${u}">${u}</button>`).join('')}</div></div>`}
+     <label class="row small" style="gap:8px"><input type="checkbox" data-a="scaleT" ${F.useScale?'checked':''}> Tərəzi ilə çəkdim (ümumi və boş bidon çəkisi ayrı)</label>
+     <div class="small muted">Bidonun tutumu (${b.cap} L) onun boş çəkisi deyil. Litr yazılarsa kq ayrıca çevrilir: × ${DENS}.</div>
+     ${over||F.exc?`<div class="box"><div class="small" style="color:var(--warn)">Miqdar bidon tutumunu (${b.cap} L) aşır.</div><label class="row small" style="gap:8px"><input type="checkbox" data-a="exc" ${F.exc?'checked':''}> Bu həqiqi istisnadır (rəhbər təsdiqi lazımdır)</label>
+       ${F.exc?`<input type="text" id="fExc" data-f="excReason" value="${esc(F.excReason)}" placeholder="Səbəb (məcburi)">`:''}</div>`:''}`}</div>
+  <div class="field"><span>3. Keyfiyyət</span><div class="seg">${[['normal','Normal'],['problem','Problem var']].map(([k,l])=>`<button class="${F.quality===k?'on':''}" data-a="qual" data-k="${k}">${l}</button>`).join('')}</div>
+   ${F.quality==='problem'?`<div class="box"><div class="chips">${Object.entries(PROB).map(([k,l])=>`<button class="chip ${F.prob===k?'on':''}" style="font-family:var(--f-sans)" data-a="prob" data-k="${k}">${l}</button>`).join('')}</div>
+     <div class="row">${F.photo?`<img class="thumb" src="${F.photo}" alt="Problemin şəkli">`:''}<label class="btn">Foto çək<input type="file" accept="image/*" capture="environment" id="fPhoto" data-a="photo" hidden></label></div>
+     <input type="text" id="fProbNote" data-f="probNote" value="${esc(F.probNote)}" placeholder="Qeyd"></div>`:''}</div>
+  ${errBox(F.err)}
+  <button class="scan" style="font-size:17px;padding:15px" data-a="saveCol">${edit?'Düzəlişi saxla':'Yadda saxla'}</button>
+  <div class="small muted">Vaxt, ekipaj (${esc(myName())}) avtomatik yazılır · GPS: <span id="gpsS">${F.gps&&F.gps.pending?'alınır…':gpsTxt(F.gps)}</span></div>`;
+}
+function colSaved(F){const c=S.collections.find(x=>x.id===F.saved),o=obj(c.objectId),r=c.routeId&&S.routes.find(x=>x.id===c.routeId),cnt=r?stopCount(r):null;
+  return mh('Yadda saxlandı','')+`<div class="done-ok"><span class="big">✓</span><b>${c.bidonId} · ${esc(o.name)}</b><span>${OP_S[c.op]} · ${esc(qtyTxt(c))} ${c.mode==='olcu'?'(ölçülmüş)':'(təxmini)'}</span>
+   <span class="small">${ft(c.ts)} · ${esc(crew(c.crewId).driver)} · ${gpsTxt(c.gps)}</span></div>
+   <div class="row" style="justify-content:center">${syncPill(c.sync)}</div>
+   ${c.op==='goturdu'?`<button class="btn dark" data-a="placeScan" data-o="${o.id}" data-r="${c.routeId||''}">Boş bidon qoydum: QR oxut</button>`:''}
+   <button class="scan" data-a="scan" data-o="${o.id}">${ICON.qr} Növbəti bidonu oxut</button>
+   ${r&&!visitOf(r)?`<button class="btn" data-a="done" data-r="${r.id}">Obyektdə işi tamamla (${cnt.exp.length} bidondan ${cnt.rec.length}-i qeyd edildi)</button>`:''}
+   <button class="btn ghost" data-a="close">Bağla</button>`}
+function saveCol(){
+  const F=U.form;if(!F||F.saving)return;
+  const b=bid(F.bidonId),o=obj(F.objectId),cid=U.user;
+  const fail=e=>{F.err=e;renderModal()};
+  let qty=null,unit=null,scale=null;
+  if(F.meas==='texmini'){if(!F.fill)return fail('Doluluğu seçin: 1/4, 1/2, 3/4 və ya dolu.')}
+  else{
+    if(F.useScale){const g=+F.gross,t=+F.tare;if(!(g>0)||!(t>=0))return fail('Ümumi və boş bidon çəkisini yazın.');qty=r1(g-t);unit='kq';scale={gross:g,tare:t,net:qty}}
+    else{if(F.qty===''||isNaN(+F.qty))return fail('Ölçülmüş miqdarı yazın.');qty=+F.qty;unit=F.unit}
+    if(!(qty>0))return fail('Sıfır və ya mənfi miqdar yazılmır. Bidon boş idisə, “Obyektdə işi tamamla”da “Boş idi” seçin.');
+    if(conv(qty,unit,'litr')>b.cap*3)return fail(`Qeyri-mümkün rəqəm: ${qty} ${unit} ${b.cap} L bidona sığmır. Rəqəmi yoxlayın.`);
+    if(conv(qty,unit,'litr')>b.cap*1.02){if(!F.exc)return fail(`Miqdar bidon tutumunu (${b.cap} L) aşır. Rəqəmi yoxlayın və ya “həqiqi istisna” seçib səbəb yazın.`);if(!F.excReason.trim())return fail('İstisnanın səbəbini yazın.')}
+  }
+  if(F.quality==='problem'&&!F.prob)return fail('Problemin növünü seçin.');
+  const prob=F.quality==='problem'?{type:F.prob,note:F.probNote,photo:F.photo}:null;
+  const exc=F.meas==='olcu'&&F.exc&&conv(qty,unit,'litr')>b.cap*1.02?{reason:F.excReason.trim(),status:'gözləyir'}:null;
+  if(F.mode==='edit'){
+    const c=S.collections.find(x=>x.id===F.id);if(!canEdit(c))return fail('Düzəliş müddəti bitib və ya anbar qəbul edib. “Düzəliş istə” istifadə edin.');
+    const was=colSum(c);Object.assign(c,{mode:F.meas,qty,unit,fill:F.meas==='texmini'?F.fill:null,scale,after:c.op==='bosaltdi'?F.after:null,quality:F.quality,prob,exc});derive(c);
+    if(c.op==='bosaltdi')b.fill=c.after;
+    c.edits.push({by:crew(cid).driver,at:Date.now(),from:was,to:colSum(c),why:'Ekipaj düzəlişi ('+S.settings.editMin+' dəq ərzində)'});
+    save();closeModal();render();toast('Düzəliş saxlandı, əvvəlki dəyər tarixçədə qalır');return;
+  }
+  if(S.collections.some(c=>c.opId===F.opId))return; // təkrar basma ikinci yığım yaratmır
+  F.saving=true;
+  const g=F.gps&&F.gps.pending?{ok:false}:F.gps;
+  const c=newCol({opId:F.opId,crewId:cid,ts:Date.now(),objectId:o.id,b,routeId:F.routeId,op:F.op,after:F.after,mode:F.meas,qty,unit,fill:F.fill,scale,quality:F.quality,prob,
+    manual:F.manual,gps:g,dur:Date.now()-F.t0,exc,offRoute:F.offRoute,second:F.second});
+  if(F.offRoute)S.requests.push({id:nid('req','SR',4),opId:uid(),ts:c.ts,sync:'telefonda',crewId:cid,type:'kenar',refId:c.id,bidonId:b.id,objectId:o.id,reason:F.offRoute,status:'gözləyir'});
+  if(!U.offline){serverAccept(c,'col');S.requests.filter(r=>r.refId===c.id&&r.sync==='telefonda').forEach(r=>serverAccept(r,'req'))}
+  save();F.saved=c.id;F.saving=false;render();
+}
+const colSum=c=>`${OP_S[c.op]}, ${c.mode==='olcu'?q1(c.qty)+' '+c.unit+' ölçülmüş':FILL_LBL[c.fill]+' təxmini'}${c.quality==='problem'?', problem: '+PROB[c.prob?.type]:''}`;
+function initSig(cv){
+  const r=cv.getBoundingClientRect(),dpr=window.devicePixelRatio||1; cv.width=r.width*dpr;cv.height=r.height*dpr;
+  const ctx=cv.getContext('2d');ctx.scale(dpr,dpr);ctx.lineWidth=2.2;ctx.lineCap='round';ctx.strokeStyle='#1A1A16';
+  if(U.form&&U.form.sigImg){const im=new Image();im.onload=()=>ctx.drawImage(im,0,0,r.width,r.height);im.src=U.form.sigImg}
+  let on=false;const p=e=>{const b=cv.getBoundingClientRect();return[e.clientX-b.left,e.clientY-b.top]};
+  cv.onpointerdown=e=>{on=true;cv.setPointerCapture(e.pointerId);const[x,y]=p(e);ctx.beginPath();ctx.moveTo(x,y)};
+  cv.onpointermove=e=>{if(!on)return;const[x,y]=p(e);ctx.lineTo(x,y);ctx.stroke()};
+  cv.onpointerup=()=>{on=false;if(U.form)U.form.sigImg=cv.toDataURL('image/png')};
+}
+/* ---------- obyektin tamamlanması ---------- */
+MODALS.done=function(){
+  const F=U.form,r=S.routes.find(x=>x.id===F.routeId),o=obj(r.objectId),cnt=stopCount(r);
+  return mh('Obyektdə işi tamamla',esc(o.name))+
+  `<div class="box"><b>${cnt.exp.length} bidondan ${cnt.rec.length}-i qeyd edildi</b>${cnt.rec.length?`<div class="small muted">${cnt.rec.join(', ')}</div>`:''}</div>
+  ${cnt.left.length?`<div class="field"><span>Qeyd edilməyən bidonlar: səbəb seçin</span>${cnt.left.map(id=>`<div class="box"><b class="mono">${id}</b><div class="chips">${LEFT_R.map(x=>`<button class="chip ${F.left[id]===x?'on':''}" style="font-family:var(--f-sans)" data-a="leftR" data-b="${id}" data-r="${x}">${x}</button>`).join('')}</div></div>`).join('')}</div>`:''}
+  ${o.needSign?`<div class="field"><span>Obyekt nümayəndəsinin təsdiqi (müqavilə üzrə, yekunda bir dəfə)</span>
+    <div class="seg">${[['var','Nümayəndə var'],['yox','Nümayəndə yoxdur']].map(([k,l])=>`<button class="${F.rep===k?'on':''}" data-a="rep" data-k="${k}">${l}</button>`).join('')}</div>
+    ${F.rep==='var'?`<input type="text" id="dSign" data-f="signName" value="${esc(F.signName)}" placeholder="Nümayəndənin adı (${esc(o.contact)})"><canvas id="sig" class="sig" aria-label="Barmaqla imza sahəsi"></canvas><button class="btn sm ghost" data-a="sigClear">İmzanı sil</button>`
+      :`<div class="chips">${NOREP_R.map(x=>`<button class="chip ${F.noRep===x?'on':''}" style="font-family:var(--f-sans)" data-a="noRepR" data-r="${x}">${x}</button>`).join('')}</div>`}</div>`:''}
+  <dl class="kv box"><dt>Vaxt</dt><dd>${ft(Date.now())} (avtomatik)</dd><dt>Ekipaj</dt><dd>${esc(myName())}</dd></dl>
+  ${errBox(F.err)}<button class="scan" style="font-size:17px;padding:15px" data-a="saveDone">Tamamla</button>`;
+}
+MODALS.skip=function(){const F=U.form,r=S.routes.find(x=>x.id===F.routeId),o=obj(r.objectId);return mh('Götürülmədi',esc(o.name))+
+  `<div class="small muted">Bu, miqdarı sıfır olan yığım deyil: obyektdə yığım aparılmayıb.</div>
+  <div class="field"><span>Səbəb</span><div class="chips">${SKIP_R.map(x=>`<button class="chip ${F.skip===x?'on':''}" style="font-family:var(--f-sans)" data-a="skipR" data-r="${x}">${x}</button>`).join('')}</div></div>
+  <label class="field"><span>Qeyd</span><input type="text" id="skNote" data-f="note" value="${esc(F.note)}" placeholder="məs. sabah 10:00-dan sonra"></label>
+  ${errBox(F.err)}<button class="btn pri" data-a="saveSkip">Qeyd et</button>`}
+MODALS.askFix=function(){const c=S.collections.find(x=>x.id===U.modal.id);return mh('Düzəliş istə',`${c.id} · ${c.bidonId} · ${ft(c.ts)}`)+
+  `<div class="box small">Hazırkı qeyd: ${esc(colSum(c))}${c.batchId?'<br>Anbar artıq qəbul edib: düzəlişi rəhbər təsdiqləyir.':''}</div>
+  <label class="field"><span>Nə səhvdir və düzgün dəyər nədir? (məcburi)</span><textarea id="afWhy" placeholder="məs. 18 kq yox, 13 kq olmalıdır"></textarea></label>
+  ${errBox(U.modal.err)}<button class="btn pri" data-a="saveAskFix">Rəhbərə göndər</button>`}
+MODALS.exp=function(){const F=U.form;const needPhoto=['yanacaq','temir'].includes(F.type);
+  return mh('Xərc əlavə et',crew(U.user).car+' · əsas yığımdan ayrıca')+
+  `<div class="field"><span>Növ</span><div class="chips">${Object.entries(EXP_T).map(([k,l])=>`<button class="chip ${F.type===k?'on':''}" style="font-family:var(--f-sans)" data-a="expT" data-k="${k}">${l}</button>`).join('')}</div></div>
+  <div class="form"><label class="field"><span>Məbləğ, ₼</span><input type="number" inputmode="decimal" step="0.01" min="0" id="eAmt" data-f="amount" value="${esc(F.amount)}"></label>
+  ${F.type==='yanacaq'?`<label class="field"><span>Litr</span><input type="number" inputmode="decimal" id="eLit" data-f="liters" value="${esc(F.liters)}"></label><label class="field"><span>Sayğac, km</span><input type="number" inputmode="numeric" id="eKm" data-f="km" value="${esc(F.km)}"></label>`:''}</div>
+  <div class="field"><span>Çekin şəkli ${needPhoto?'(məcburi)':'(tövsiyə olunur)'}</span><div class="row">${F.photo?`<img class="thumb" src="${F.photo}" alt="Çek">`:''}<label class="btn">Çeki çək<input type="file" accept="image/*" capture="environment" id="ePhoto" data-a="photo" hidden></label></div></div>
+  <label class="field"><span>Qeyd</span><input type="text" id="eNote" data-f="note" value="${esc(F.note)}"></label>
+  ${errBox(F.err)}<button class="btn pri" data-a="saveExp">Yadda saxla</button>`}
+MODALS.logout=function(){const p=pendingSync(U.user);return mh('Çıxış','')+
+  `<div class="warnbox">${p.length} qeyd hələ serverə göndərilməyib. Çıxsanız da bu telefonda qalacaq, növbəti girişdə internet olanda göndəriləcək.</div>
+  <div class="row"><button class="btn" data-a="close">Qal</button><button class="btn pri" data-a="doLogout">Yenə də çıx</button></div>`}
+
+/* ================= ANBAR ================= */
+function whState(cid){let w=U.wh[cid];const cs=pendingCols(cid),bs=inCar(cid).filter(b=>b.fill!=='bos');
+  if(!w){w=U.wh[cid]={sel:{},bsel:{},gross:'',tare:'0',note:'',clean:'yuyulmali'};cs.forEach(c=>w.sel[c.id]=true);bs.forEach(b=>w.bsel[b.id]=true)}
+  for(const c of cs)if(!(c.id in w.sel))w.sel[c.id]=true;
+  return {w,cs,bs}}
+function vWarehouse(){
+  const tabs=`<div class="subnav"><button class="${U.whTab==='pending'?'on':''}" data-a="whTab" data-k="pending">Gözləyən qəbullar</button><button class="${U.whTab==='done'?'on':''}" data-a="whTab" data-k="done">Qəbul edilmişlər</button></div>`;
+  return `<main class="wrap"><div class="head"><div><h2>Anbar qəbulu</h2><p>Qəbul konkret boşaltma partiyasına bağlanır, günün cəminə yox. Anbar qalığına yalnız faktiki çəki daxil olur; ekipajın yazdığı miqdar dəyişmir.</p></div></div>
+  ${tabs}${U.whTab==='done'?batchTable(true):whPending()}<p class="small muted">Anbar məsulu müqavilə və qiyməti görmür, dəyişmir.</p></main>`;
+}
+function whPending(){
+  const crs=S.crews.filter(c=>pendingCols(c.id).length||inCar(c.id).some(b=>b.fill!=='bos'));
+  if(!crs.length)return '<div class="card flat empty">Qəbul gözləyən partiya yoxdur.</div>';
+  return crs.map(c=>{const {w,cs,bs}=whState(c.id);const sel=cs.filter(x=>w.sel[x.id]);
+    const meas=sel.filter(x=>x.mode==='olcu').reduce((a,x)=>a+x.kg,0),est=sel.filter(x=>x.mode!=='olcu').reduce((a,x)=>a+x.kg,0);
+    const net=w.gross!==''?r1(+w.gross-(+w.tare||0)):null;const decl=meas+est;
+    return `<section class="card"><div class="head"><div><h3>${esc(c.driver)} · ${esc(c.car)}</h3><div class="small muted">${cs.length} yığım gözləyir · nəqliyyatda ${bs.length} dolu bidon</div></div></div>
+    ${cs.length?`<div class="tw"><table><thead><tr><th></th><th>Vaxt</th><th>Obyekt</th><th>Bidon</th><th>Əməliyyat</th><th class="n">İlkin</th><th class="n">kq</th><th>Dəqiqlik</th><th>Keyfiyyət</th></tr></thead><tbody>
+     ${cs.map(x=>`<tr><td><input type="checkbox" data-a="whSel" data-c="${c.id}" data-id="${x.id}" ${w.sel[x.id]?'checked':''} aria-label="${x.id} partiyaya daxil et"></td><td class="mono">${fd(x.date)} ${ft(x.ts)}</td><td>${esc(obj(x.objectId).name)}</td><td class="mono">${x.bidonId}</td><td>${OP_S[x.op]}</td><td class="n">${esc(qtyTxt(x))}</td><td class="n">${q1(x.kg)}</td><td>${accTxt(x)}</td><td>${x.quality==='problem'?`<span class="pill warn">${PROB[x.prob?.type]}</span>`:'Normal'}</td></tr>`).join('')}</tbody></table></div>`:''}
+    ${bs.length?`<div class="field"><span>Gətirilən dolu bidonlar (qəbuldan sonra anbara keçir və boş sayılır)</span><div class="chips">${bs.map(b=>`<label class="chip ${w.bsel[b.id]?'on':''}"><input type="checkbox" data-a="whBSel" data-c="${c.id}" data-id="${b.id}" ${w.bsel[b.id]?'checked':''} style="margin-right:6px">${b.id}</label>`).join('')}</div>
+      <label class="field" style="max-width:260px"><span>Boşaldıldıqdan sonra təmizlik</span><select data-w="clean" data-c="${c.id}">${Object.entries(CLEAN).map(([k,l])=>`<option value="${k}" ${w.clean===k?'selected':''}>${l}</option>`).join('')}</select></label></div>`:''}
+    <div class="sumline small"><span>Seçilən: <b>${sel.length}</b> yığım · bəyan <b class="num">${q1(decl)} kq</b> (ölçülmüş ${q1(meas)} + təxmini ${q1(est)})</span>${sel.length<cs.length?'<span class="pill acc">qismən qəbul: qalanlar gözləməyə davam edir</span>':''}</div>
+    <div class="form"><label class="field"><span>Ümumi çəki (tərəzi), kq</span><input type="number" inputmode="decimal" step="0.1" min="0" data-w="gross" data-c="${c.id}" value="${esc(w.gross)}"></label>
+     <label class="field"><span>Tara (qab/çən), kq</span><input type="number" inputmode="decimal" step="0.1" min="0" data-w="tare" data-c="${c.id}" value="${esc(w.tare)}"></label>
+     <div class="field"><span>Faktiki xalis çəki</span><b class="num" style="padding:10px 0" id="whNet_${c.id}">${net!=null?q1(net)+' kq · fərq '+(net-decl>0?'+':'')+q1(net-decl)+' kq':'—'}</b></div>
+     <label class="field full"><span>Uyğunsuzluq qeydi</span><input type="text" data-w="note" data-c="${c.id}" value="${esc(w.note)}" placeholder="məs. çəndə su qatı görünür"></label></div>
+    <div class="row"><button class="btn pri" data-a="whSave" data-c="${c.id}" ${sel.length||Object.values(w.bsel).some(Boolean)?'':'disabled'}>Partiyanı qəbul et</button><span class="small muted">Faktiki çəki yazılmadan qəbul təsdiqlənmir və qalıq artmır.</span></div></section>`}).join('');
+}
+function batchTable(withFilter){
+  const f=U.bdate;const bs=S.batches.filter(b=>b.date>=f.from&&b.date<=f.to).sort((a,b)=>b.ts-a.ts);
+  return `${withFilter?`<div class="row"><label class="field"><span>Başlanğıc</span><input type="date" data-c="bd.from" value="${f.from}"></label><label class="field"><span>Son</span><input type="date" data-c="bd.to" value="${f.to}"></label></div>`:''}
+  <div class="tw"><table><thead><tr><th>Partiya</th><th>Qəbul vaxtı</th><th>Ekipaj</th><th class="n">Yığım</th><th class="n">Bəyan, kq</th><th class="n">Faktiki, kq</th><th class="n">Çəki fərqi, kq</th><th>Qəbul edən</th><th>Qeyd</th><th></th></tr></thead><tbody>
+  ${bs.map(b=>{const p=b.declared?(b.net-b.declared)/b.declared*100:0;const thr=b.hasEst?S.settings.thrEst:S.settings.thrMeas;
+    return `<tr><td class="mono">${b.id}</td><td class="small">${fdt(b.ts)}</td><td>${esc(crew(b.crewId).driver)}</td><td class="n">${b.colIds.length}${b.bidonIds.length?` · ${b.bidonIds.length} bidon`:''}</td><td class="n">${q1(b.declared)}${b.hasEst?' <span class="pill">təxmini daxil</span>':''}</td><td class="n"><b>${q1(b.net)}</b></td>
+    <td class="n"><span class="pill ${Math.abs(p)>thr?'crit':'ok'}">${b.diff>0?'+':''}${q1(b.diff)} (${q1(p)}%)</span></td><td class="small">${esc(b.by)}</td><td class="small">${esc(b.note)}</td><td><button class="btn sm" data-a="batchOpen" data-id="${b.id}">Aç</button></td></tr>`}).join('')||'<tr><td colspan="10" class="empty">Dövrdə qəbul yoxdur</td></tr>'}</tbody></table></div>
+  <div class="small muted">Çəki fərqi ayrıca saxlanır, obyektlərin əvvəlki ölçülərinə paylanmır. Hədd: ölçülmüş ${S.settings.thrMeas}%, təxmini daxil olduqda ${S.settings.thrEst}%.</div>`;
+}
+MODALS.batch=function(){const b=S.batches.find(x=>x.id===U.modal.id);const cs=b.colIds.map(id=>S.collections.find(c=>c.id===id));
+  return mh('Partiya '+b.id,`${esc(crew(b.crewId).driver)} · ${fdt(b.ts)} · qəbul edən ${esc(b.by)}`)+
+  `<dl class="kv box"><dt>Ümumi çəki</dt><dd>${q1(b.gross)} kq</dd><dt>Tara</dt><dd>${q1(b.tare)} kq</dd><dt>Faktiki xalis</dt><dd><b>${q1(b.net)} kq</b> (anbar qalığına daxil olan)</dd><dt>Ekipajın bəyanı</dt><dd>${q1(b.declared)} kq</dd><dt>Çəki fərqi</dt><dd>${b.diff>0?'+':''}${q1(b.diff)} kq</dd>${b.bidonIds.length?`<dt>Bidonlar</dt><dd>${b.bidonIds.join(', ')} → anbar (${CLEAN[b.clean]||'—'})</dd>`:''}${b.note?`<dt>Qeyd</dt><dd>${esc(b.note)}</dd>`:''}</dl>
+  <div class="tw"><table><thead><tr><th>Yığım</th><th>Obyekt</th><th>Bidon</th><th class="n">İlkin</th><th class="n">kq</th><th>Dəqiqlik</th></tr></thead><tbody>${cs.map(c=>`<tr class="${c.voided?'strike':''}"><td class="mono small">${c.id}</td><td>${esc(obj(c.objectId).name)}</td><td class="mono">${c.bidonId}</td><td class="n">${esc(qtyTxt(c))}</td><td class="n">${q1(c.kg)}</td><td>${accTxt(c)}</td></tr>`).join('')}</tbody></table></div>`}
+
+/* ================= RƏHBƏR: PANEL ================= */
+function kpi(l,v,sub,rng){return `<div class="kpi"><span class="lbl">${l}</span><b>${v}</b><span class="sub">${sub}</span><span class="rng">${rng}</span></div>`}
+function vPanel(){
+  const stops=S.routes.filter(r=>r.date===TODAY),stc={tamam:0,qismen:0,goturulmedi:0,gozlenilir:0};stops.forEach(s=>stc[stopState(s)]++);
+  const today=COLS().filter(c=>c.date===TODAY),meas=today.filter(c=>c.mode==='olcu'),est=today.filter(c=>c.mode!=='olcu');
+  const pend=S.crews.flatMap(c=>pendingCols(c.id)),pendKg=pend.reduce((a,c)=>a+c.kg,0);
+  const bal=S.objects.map(o=>({o,b:balance(o.id)}));const weOwe=bal.filter(x=>x.b<0&&x.o.contract==='biz').reduce((a,x)=>a-x.b,0),theyOwe=bal.filter(x=>x.b>0&&x.o.contract==='obyekt').reduce((a,x)=>a+x.b,0);
+  const bd=Object.values(buyerDebt()).reduce((a,b)=>a+Math.max(0,b.amt-b.paid),0);const pe=pendEst();
+  const A=alerts(),crit=A.filter(a=>a.lvl==='crit'),warn=A.filter(a=>a.lvl!=='crit');
+  const alertList=L=>L.slice(0,8).map(a=>`<button class="alert ${a.lvl}" data-a="alertOpen" data-k="${esc(a.key)}"><i></i><div><b>${esc(a.t)}</b><span>${esc(a.d)}</span>${a.s&&a.s.owner?`<span> · məsul: ${esc(a.s.owner)}</span>`:''}</div></button>`).join('')||'<div class="empty small">Yoxdur</div>';
+  return `<main class="wrap"><div class="head"><div><h2>Bu gün, ${fd(TODAY)}</h2><p>Hər rəqəmin altında tarix aralığı və ölçü vahidi göstərilib.</p></div><div class="row"><button class="btn" data-a="go" data-v="emel" data-k="marsrut">Marşrut</button><button class="btn pri" data-a="go" data-v="emel" data-k="qebul">Anbar qəbulları</button></div></div>
+  <div class="kpis k4">
+   ${kpi('Obyektlər',`${stc.tamam} / ${stops.length}`,`tamamlandı · qismən ${stc.qismen} · götürülmədi ${stc.goturulmedi} · qalan ${stc.gozlenilir}`,`bu gün · obyekt`)}
+   ${kpi('Ölçülmüş yığım',q1(meas.reduce((a,c)=>a+c.kg,0))+' kq',`${meas.length} bidon`,'bu gün · kq')}
+   ${kpi('Təxmini yığım','≈ '+q1(est.reduce((a,c)=>a+c.kg,0))+' kq',`${est.length} bidon · hesab yaratmır`,'bu gün · kq (təxmini)')}
+   ${kpi('Qəbul gözləyir',`${pend.length} yığım`,`≈ ${q1(pendKg)} kq bəyan`,'hazırda · kq')}
+   ${kpi('Faktiki anbar qalığı',q1(stockAt())+' kq','başlanğıc + qəbul − çıxış ± düzəliş',fdy(TODAY)+' · kq')}
+   ${kpi('Biz borcluyuq',money(weOwe),'obyektlərə (biz ödəyirik)',fdy(TODAY)+' · ₼')}
+   ${kpi('Bizə borclular',money(theyOwe+bd),`obyektlər ${money(theyOwe)} · alıcılar ${money(bd)}`,fdy(TODAY)+' · ₼')}
+   ${kpi('Dəqiqləşdirmə gözləyir',`${pe.n} yığım`,`≈ ${q1(pe.kg)} kq təxmini, borc yaradılmayıb`,'bütün dövr · kq')}
+  </div>
+  <div class="grid2"><section class="card"><div class="row" style="justify-content:space-between"><h3>Təcili</h3><span class="pill crit">${crit.length}</span></div><div class="alerts">${alertList(crit)}</div>${crit.length>8?`<div class="small muted">və daha ${crit.length-8}</div>`:''}</section>
+   <section class="card"><div class="row" style="justify-content:space-between"><h3>Yoxlanmalı</h3><span class="pill warn">${warn.length}</span></div><div class="alerts">${alertList(warn)}</div>${warn.length>8?`<div class="small muted">və daha ${warn.length-8} · <a href="#" data-a="allAlerts">hamısı</a></div>`:''}</section></div>
+  <div class="grid2"><section class="card"><h3>Ekipajlar bu gün</h3><div class="tw"><table><thead><tr><th>Ekipaj</th><th class="n">Obyekt</th><th class="n">Bidon</th><th class="n">Ölçülmüş, kq</th><th class="n">Təxmini, kq</th><th class="n">Orta qeyd, san</th></tr></thead><tbody>
+   ${S.crews.filter(c=>c.status==='aktiv').map(c=>{const cs=today.filter(x=>x.crewId===c.id);const st=stops.filter(s=>s.crewId===c.id);const ds=cs.filter(x=>x.dur).map(x=>x.dur/1000).sort((a,b)=>a-b);
+     return `<tr><td>${esc(c.driver)}<div class="small muted">${c.car}</div></td><td class="n">${st.filter(s=>stopState(s)==='tamam').length}/${st.length}</td><td class="n">${cs.length}</td><td class="n">${q1(cs.filter(x=>x.mode==='olcu').reduce((a,x)=>a+x.kg,0))}</td><td class="n">${q1(cs.filter(x=>x.mode!=='olcu').reduce((a,x)=>a+x.kg,0))}</td><td class="n">${ds.length?Math.round(ds[Math.floor(ds.length/2)]):'—'}</td></tr>`}).join('')}</tbody></table></div>
+   <div class="small muted">Orta qeyd: QR tanındıqdan “Yadda saxla”ya qədər (median). Hədəf 15–20 san.</div></section>
+   <section class="card"><div class="row" style="justify-content:space-between"><h3>Bugünkü obyektlər</h3><span class="small muted">GPS yalnız yığım anında, canlı izləmə yoxdur</span></div>${mapSvg(stops)}
+    <div class="row small muted"><span class="row" style="gap:5px"><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="var(--ok)"/></svg>tamamlandı</span><span class="row" style="gap:5px"><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="var(--accent)"/></svg>qismən</span><span class="row" style="gap:5px"><svg width="12" height="12"><circle cx="6" cy="6" r="4.5" fill="none" stroke="var(--accent)" stroke-width="2"/></svg>gözlənilir</span><span class="row" style="gap:5px"><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="var(--warn)"/></svg>götürülmədi</span></div></section></div></main>`;
+}
+function mapSvg(stops){
+  const W=600,H=280,la=[40.358,40.412],ln=[49.828,49.908];
+  const X=v=>20+(v-ln[0])/(ln[1]-ln[0])*(W-40),Y=v=>H-20-(v-la[0])/(la[1]-la[0])*(H-40);
+  const zones=[['Səbail',40.362,49.836],['Nəsimi',40.383,49.840],['Nərimanov',40.408,49.866],['Xətai',40.389,49.895]];
+  const coast=`M0 ${H} L0 ${Y(40.360)} C ${X(49.84)} ${Y(40.359)}, ${X(49.86)} ${Y(40.362)}, ${X(49.875)} ${Y(40.370)} S ${X(49.9)} ${Y(40.372)}, ${W} ${Y(40.368)} L ${W} ${H} Z`;
+  return `<svg class="map" viewBox="0 0 ${W} ${H}" role="img" aria-label="Bugünkü obyektlərin sxematik xəritəsi"><path d="${coast}" fill="color-mix(in srgb,var(--accent) 10%,transparent)"/><text x="${W-110}" y="${H-12}">Bakı buxtası</text>
+   ${zones.map(z=>`<text x="${X(z[2])}" y="${Y(z[1])}" style="font-size:12px;letter-spacing:.08em;opacity:.7">${z[0].toUpperCase()}</text>`).join('')}
+   ${stops.map(s=>{const o=obj(s.objectId),x=X(o.lng),y=Y(o.lat),st=stopState(s);const f=st==='tamam'?'var(--ok)':st==='goturulmedi'?'var(--warn)':st==='qismen'?'var(--accent)':'none';
+    return `<g><circle cx="${x}" cy="${y}" r="7" fill="${f}" stroke="${f==='none'?'var(--accent)':f}" stroke-width="2.5"/><text x="${x+11}" y="${y+4}" style="fill:var(--ink)">${esc(o.name)}</text></g>`}).join('')}</svg>`;
+}
+MODALS.alert=function(){const a=alerts(true).find(x=>x.key===U.modal.k);if(!a)return mh('Xəbərdarlıq','')+'<div class="empty">Tapılmadı</div>';const s=S.alertSt[a.key]||{};
+  return mh(esc(a.t),a.lvl==='crit'?'Təcili':'Yoxlanmalı')+`<div class="box">${esc(a.d)}</div>
+  ${a.ref?`<button class="btn" data-a="openRef" data-t="${a.ref.t}" data-id="${a.ref.id}">Aid olduğu qeydi aç</button>`:''}
+  <div class="form"><label class="field"><span>Məsul şəxs</span><select id="alOwner"><option value="">—</option>${OWNERS.map(o=>`<option ${s.owner===o?'selected':''}>${o}</option>`).join('')}</select></label>
+  <label class="field full"><span>Araşdırma qeydi</span><textarea id="alNote">${esc(s.note||'')}</textarea></label>
+  <label class="field full"><span>Bağlanma səbəbi</span><input type="text" id="alWhy" value="${esc(s.closeReason||'')}" placeholder="məs. yoxlanıldı, ekipaj izah etdi"></label></div>
+  ${s.closed?`<div class="okbox">Bağlanıb: ${esc(s.by||'')}, ${fdt(s.closedAt)}</div>`:''}${errBox(U.modal.err)}
+  <div class="row"><button class="btn" data-a="alertSave">Saxla</button>${s.closed?`<button class="btn" data-a="alertReopen">Yenidən aç</button>`:`<button class="btn pri" data-a="alertClose">Bağla (səbəblə)</button>`}</div>`}
+MODALS.allAlerts=function(){const A=alerts(U.showClosed);return mh('Bütün xəbərdarlıqlar',A.length+' ədəd')+
+  `<label class="row small" style="gap:8px"><input type="checkbox" data-a="showClosed" ${U.showClosed?'checked':''}> Bağlanmışları da göstər</label>
+  <div class="alerts">${A.map(a=>`<button class="alert ${a.lvl}" data-a="alertOpen" data-k="${esc(a.key)}"><i></i><div><b>${esc(a.t)}${a.s&&a.s.closed?' · bağlanıb':''}</b><span>${esc(a.d)}</span></div></button>`).join('')}</div>`}
+
+/* ================= RƏHBƏR: ƏMƏLİYYATLAR ================= */
+function vEmel(){const k=U.sub.emel;
+  const body={yigim:vCols,marsrut:vRoute,ziyaret:vVisits,qebul:()=>`<section class="card"><h3>Anbar qəbulları (partiyalar)</h3>${batchTable(true)}</section>`,sorgu:vReqs}[k]();
+  return `<main class="wrap"><div class="head"><div><h2>Əməliyyatlar</h2></div></div>${subnav('emel')}${body}</main>`}
+function filteredCols(){const f=U.f;return S.collections.filter(c=>srvRec(c)&&c.date>=f.from&&c.date<=f.to&&(!f.obj||c.objectId===f.obj)&&(!f.crew||c.crewId===f.crew)&&
+  (!f.st||(f.st==='yoxlama'&&c.sync==='yoxlama')||(f.st==='deq'&&c.amtSt==='gözləyir'&&!c.voided)||(f.st==='legv'&&c.voided)||(f.st==='qebul'&&!c.batchId&&!c.voided))).sort((a,b)=>b.ts-a.ts)}
+function colFlags(c){const f=[];if(c.manual)f.push('<span class="pill warn">əl ilə</span>');if(c.offRoute)f.push('<span class="pill warn">marşrutdan kənar</span>');if(c.second)f.push('<span class="pill warn">ikinci yığım</span>');
+  if(!c.gps||!c.gps.ok)f.push('<span class="pill warn">GPS yox</span>');else if(c.gps.dist>200)f.push(`<span class="pill warn">${c.gps.dist} m</span>`);
+  if(c.quality==='problem')f.push(`<span class="pill warn">${PROB[c.prob?.type]}</span>`);if(c.exc)f.push(`<span class="pill ${c.exc.status==='təsdiqləndi'?'ok':'crit'}">istisna: ${c.exc.status}</span>`);
+  if(c.conflict)f.push('<span class="pill crit">ziddiyyət</span>');if(c.serverTs&&c.serverTs-c.ts>S.settings.late*6e4)f.push('<span class="pill warn">gec göndərilib</span>');
+  if(c.edits.length)f.push(`<span class="pill acc">düzəldilib ×${c.edits.length}</span>`);if(c.voided)f.push('<span class="pill crit">ləğv edilib</span>');return f.join('')}
+function vCols(){
+  const cs=filteredCols(),f=U.f,live=cs.filter(c=>!c.voided);const m=live.filter(c=>c.mode==='olcu').reduce((a,c)=>a+c.kg,0),e=live.filter(c=>c.mode!=='olcu').reduce((a,c)=>a+c.kg,0);const shown=cs.slice(0,150);
+  return `<div class="row" style="align-items:flex-end"><label class="field"><span>Başlanğıc</span><input type="date" data-c="f.from" value="${f.from}"></label><label class="field"><span>Son</span><input type="date" data-c="f.to" value="${f.to}"></label>
+   <label class="field"><span>Obyekt</span><select data-c="f.obj"><option value="">Hamısı</option>${S.objects.map(o=>`<option value="${o.id}" ${f.obj===o.id?'selected':''}>${esc(o.name)}</option>`).join('')}</select></label>
+   <label class="field"><span>Ekipaj</span><select data-c="f.crew"><option value="">Hamısı</option>${S.crews.map(c=>`<option value="${c.id}" ${f.crew===c.id?'selected':''}>${esc(c.driver)}</option>`).join('')}</select></label>
+   <label class="field"><span>Status</span><select data-c="f.st">${[['','Hamısı'],['yoxlama','Yoxlama tələb olunur'],['deq','Dəqiqləşdirmə gözləyir'],['qebul','Anbar qəbulu gözləyir'],['legv','Ləğv edilənlər']].map(([k,l])=>`<option value="${k}" ${f.st===k?'selected':''}>${l}</option>`).join('')}</select></label>
+   <button class="btn" data-a="dl" data-t="col">CSV yüklə</button></div>
+  <div class="small">${cs.length} qeyd · ölçülmüş <b class="num">${q1(m)} kq</b> · təxmini <b class="num">≈ ${q1(e)} kq</b></div>
+  <div class="tw"><table><thead><tr><th>ID</th><th>Telefon / server vaxtı</th><th>Obyekt</th><th>Bidon</th><th>Ekipaj</th><th>Əməliyyat</th><th class="n">İlkin miqdar</th><th class="n">kq</th><th>Dəqiqlik</th><th class="n">Hesab</th><th>Anbar</th><th>Status</th><th></th></tr></thead><tbody>
+  ${shown.map(c=>{const o=obj(c.objectId);return `<tr class="${c.voided?'strike':c.sync==='yoxlama'?'hi':''}"><td class="mono small">${c.id}</td><td class="mono small" style="white-space:nowrap">${fdt(c.ts)}<div class="muted">${c.serverTs?'server '+ft(c.serverTs):''}</div></td><td>${esc(o.name)}<div class="flags">${colFlags(c)}</div></td><td class="mono small">${c.bidonId}</td><td>${esc(crew(c.crewId).driver)}</td>
+   <td class="small">${OP_S[c.op]}${c.after?'<div class="muted">'+AFTER[c.after]+'</div>':''}</td><td class="n">${esc(qtyTxt(c))}</td><td class="n" title="${esc(c.rule)}">${q1(c.kg)}</td><td>${accTxt(c)}</td>
+   <td class="n small">${c.amtSt==='hesablandı'?(c.k.contract==='biz'?'−':'+')+money(c.amount):c.amtSt==='gözləyir'?'<span class="pill warn">dəqiqləşdirmə gözləyir</span>':'<span class="muted">'+c.amtSt+'</span>'}</td>
+   <td class="small">${c.batchId?`<a href="#" data-a="batchOpen" data-id="${c.batchId}">${c.batchId}</a>`:'<span class="pill">gözləyir</span>'}</td><td>${syncPill(c.sync)}</td><td><button class="btn sm" data-a="colOpen" data-id="${c.id}">Aç</button></td></tr>`}).join('')||'<tr><td colspan="13" class="empty">Seçilmiş dövrdə yığım yoxdur</td></tr>'}</tbody></table></div>
+  ${cs.length>150?'<div class="small muted">İlk 150 qeyd göstərilir. Dövrü daraldın və ya CSV yükləyin.</div>':''}
+  <div class="small muted">Hesab: “−” biz obyektə ödəməliyik, “+” obyekt bizə ödəməlidir. Qiymət qeyd günü qüvvədə olan dəyərdir və sonradan dəyişmir. Telefonda saxlanıb hələ göndərilməyən qeydlər burada görünmür.</div>`;
+}
+MODALS.colOpen=function(){const c=S.collections.find(x=>x.id===U.modal.id),o=obj(c.objectId),M=U.modal;
+  const inRep=S.reports.some(r=>r.objectId===c.objectId&&r.from<=c.date&&r.to>=c.date);
+  return mh('Yığım '+c.id,`${esc(o.name)} · ${c.bidonId} · ${esc(crew(c.crewId).driver)}`)+
+  `<div class="row" style="gap:4px">${syncPill(c.sync)}${accTxt(c)}${colFlags(c)}</div>
+  <dl class="kv box"><dt>Telefonda yaradılıb</dt><dd>${fdt(c.ts)}</dd><dt>Server qəbulu</dt><dd>${c.serverTs?fdt(c.serverTs)+` (${Math.round((c.serverTs-c.ts)/6e4)} dəq fərq)`:'—'}</dd><dt>Əməliyyat ID</dt><dd class="mono small">${c.opId}</dd>
+   <dt>Əməliyyat</dt><dd>${OP[c.op]}${c.after?' · '+AFTER[c.after]:''}</dd><dt>İlkin qeyd</dt><dd>${esc(qtyTxt(c))}${c.scale?` (ümumi ${c.scale.gross} − boş ${c.scale.tare} = ${c.scale.net} kq)`:''}</dd>
+   <dt>Çevrilmiş</dt><dd>${q1(c.kg)} kq · qayda: ${esc(c.rule)}</dd><dt>Bidon tutumu</dt><dd>${c.cap} L</dd>
+   <dt>Müqavilə</dt><dd>${CONTRACT_S[c.k.contract]} · ${BASE[c.k.base]} · qeyd günü qiyməti ${c.k.priceAt} ₼</dd><dt>Hesab</dt><dd>${c.amtSt==='hesablandı'?money(c.amount):c.amtSt}</dd>
+   <dt>GPS</dt><dd>${gpsTxt(c.gps)}</dd><dt>Anbar</dt><dd>${c.batchId?c.batchId:'qəbul gözləyir'}</dd>${c.offRoute?`<dt>Marşrutdan kənar</dt><dd>${esc(c.offRoute)}</dd>`:''}${c.second?`<dt>İkinci yığım</dt><dd>${esc(c.second)}</dd>`:''}
+   ${c.prob?`<dt>Problem</dt><dd>${PROB[c.prob.type]} ${esc(c.prob.note||'')}${c.prob.photo?`<br><img class="thumb" src="${c.prob.photo}" alt="Problem şəkli">`:''}</dd>`:''}${c.exc?`<dt>İstisna</dt><dd>${esc(c.exc.reason)} · ${c.exc.status}</dd>`:''}${c.conflict?`<dt>Ziddiyyət</dt><dd>${c.conflict.join(', ')}</dd>`:''}${c.voided?`<dt>Ləğv</dt><dd>${esc(c.voidBy)}, ${fdt(c.voidAt)}: ${esc(c.voidWhy)}</dd>`:''}</dl>
+  ${c.edits.length?`<div class="box small"><b>Tarixçə</b>${c.edits.map(e=>`<div>${esc(e.by)}, ${fdt(e.at)}: ${esc(e.from)} → ${esc(e.to)}${e.why?' · '+esc(e.why):''}</div>`).join('')}</div>`:''}
+  ${c.exc&&c.exc.status==='gözləyir'&&!c.voided?`<div class="row"><button class="btn pri" data-a="excOk">İstisnanı təsdiqlə</button><button class="btn danger" data-a="excNo">İstisnanı rədd et (düzəliş tələb olunur)</button></div>`:''}
+  ${c.sync==='yoxlama'&&!(c.exc&&c.exc.status==='gözləyir')&&!c.voided?`<button class="btn pri" data-a="colChecked">Yoxlandı, qəbul et${c.conflict?' (ziddiyyət həll edildi)':''}</button>`:''}
+  ${c.voided?'':`<details class="box" ${M.edit?'open':''}><summary><b>Əsaslandırılmış düzəliş</b></summary>
+   ${c.batchId?'<div class="small muted" style="margin-top:6px">Anbar qəbulu faktiki çəki ilə aparılıb: bu düzəliş anbar qalığını dəyişmir, yığım qeydini və hesablaşmanı dəyişir.</div>':''}${inRep?'<div class="warnbox" style="margin-top:6px">Bu yığım çıxarılmış sverkaya düşür. Düzəlişdən sonra hesabat yeni versiya ilə çıxarılmalıdır.</div>':''}
+   <div class="form" style="margin-top:8px"><label class="field"><span>Dəqiqlik</span><select id="eMode"><option value="olcu" ${c.mode==='olcu'?'selected':''}>Ölçülmüş</option><option value="texmini" ${c.mode!=='olcu'?'selected':''}>Təxmini</option></select></label>
+   <label class="field"><span>Ölçülmüş miqdar</span><input type="number" inputmode="decimal" step="0.1" id="eQty" value="${c.qty??''}"></label>
+   <label class="field"><span>Vahid</span><select id="eUnit">${['kq','litr'].map(u=>`<option ${c.unit===u?'selected':''}>${u}</option>`).join('')}</select></label>
+   <label class="field"><span>Doluluq (təxmini)</span><select id="eFill">${FILL_KEYS.map(k=>`<option value="${k}" ${c.fill===k?'selected':''}>${FILL_LBL[k]}</option>`).join('')}</select></label>
+   <label class="field full"><span>Səbəb (məcburi)</span><input type="text" id="eWhy" placeholder="məs. obyektin tərəzi qəbzinə görə"></label></div>
+   ${errBox(M.err)}<button class="btn pri" data-a="saveEditCol">Düzəlişi saxla</button></details>
+  <details class="box"><summary><b>Ləğv et (əks qeyd)</b></summary><div class="small muted" style="margin-top:6px">Qeyd silinmir. Hesablaşmaya əlaqəli əks qeyd yazılır, tarixçə qorunur.</div>
+   <input type="text" id="vWhy" placeholder="Ləğvin səbəbi (məcburi)" style="margin-top:8px;width:100%"><button class="btn danger" data-a="voidCol" style="margin-top:8px">Ləğv et</button></details>`}`}
+
+/* --- marşrut --- */
+function suggestFor(date){const used=new Set(S.routes.filter(r=>r.date===date).map(r=>r.objectId));const prev=addDays(date,-1);
+  return S.objects.filter(o=>o.status==='aktiv'&&!used.has(o.id)).map(o=>{const l=COLS().filter(c=>c.objectId===o.id&&c.date<=prev).reduce((a,c)=>!a||c.ts>a.ts?c:a,null);const n=l?diffDays(date,l.date):99;
+    const missed=S.routes.some(r=>r.date===prev&&r.objectId===o.id&&stopState(r)==='goturulmedi');return {o,n,missed,late:n>o.freq+2,due:n>=o.freq}}).filter(x=>x.due||x.missed).sort((a,b)=>(b.n-b.o.freq)-(a.n-a.o.freq))}
+const zoneCrewDefault=z=>['Nərimanov','Xətai'].includes(z)?'C2':'C1';
+function vRoute(){
+  const date=U.rdate,act=S.crews.filter(c=>c.status==='aktiv'),sug=suggestFor(date),isClosed=!!S.closed[date];
+  return `<div class="head"><div><h3>Marşrut: ${fd(date)}</h3><p class="small muted" style="margin:0">Ekipaj öz telefonunda yalnız bugünkü marşrutunu görür. Gün bağlananda gözləyən obyektlər “götürülmədi” olur.</p></div>
+   <div class="row"><div class="seg">${[[TODAY,'Bu gün'],[addDays(TODAY,1),'Sabah']].map(([d,l])=>`<button class="${date===d?'on':''}" data-a="rdate" data-d="${d}">${l}</button>`).join('')}</div><input type="date" data-c="rdate" value="${date}">
+   ${date<=TODAY?(isClosed?'<span class="pill ok">Gün bağlanıb</span>':`<button class="btn dark" data-a="closeDay">Günü bağla</button>`):''}</div></div>
+  ${sug.length?`<section class="card"><div class="row" style="justify-content:space-between"><h3>Təklif olunan obyektlər</h3><span class="small muted">vaxtı çatmış, gecikən və dünən götürülməyənlər</span></div>
+   <div class="list">${sug.map(x=>`<div class="li"><div><b>${esc(x.o.name)}</b> <span class="small muted">${x.o.zone} · ${x.n>90?'heç götürülməyib':x.n+' gün əvvəl'} · tezlik ${x.o.freq} gün</span>
+    <div class="flags row" style="gap:4px;margin-top:3px">${x.late?'<span class="pill crit">gecikir</span>':'<span class="pill acc">vaxtı çatıb</span>'}${x.missed?'<span class="pill warn">dünən götürülmədi</span>':''}</div></div>
+    <div class="row">${act.map(c=>`<button class="btn sm ${zoneCrewDefault(x.o.zone)===c.id?'pri':''}" data-a="assign" data-o="${x.o.id}" data-c="${c.id}">→ ${esc(c.driver.split(' ')[0])}</button>`).join('')}</div></div>`).join('')}</div></section>`:''}
+  <div class="grid2">${act.map(c=>{const st=stopsOf(date,c.id);const free=S.objects.filter(o=>o.status==='aktiv'&&!S.routes.some(r=>r.date===date&&r.objectId===o.id));
+   return `<section class="card"><div class="row" style="justify-content:space-between"><div><h3>${esc(c.driver)}</h3><div class="small muted">${c.car} · ${esc(c.helper)}</div></div><button class="btn sm" data-a="sheet" data-c="${c.id}">Marşrut vərəqi</button></div>
+   ${st.length?`<div class="list">${st.map((s,i)=>{const o=obj(s.objectId),ss=stopState(s),cn=stopCount(s);return `<div class="li"><div style="flex:1"><div class="row" style="gap:8px"><span class="seq" style="width:26px;height:26px;font-size:13px">${s.seq}</span><b>${esc(o.name)}</b>${stPill(ss,!visitOf(s))}<span class="small muted">${cn.rec.length}/${cn.exp.length} bidon</span></div>
+    <div class="row small" style="margin-top:6px"><input type="text" data-c="stopWin" data-id="${s.id}" value="${esc(s.win)}" style="width:110px" aria-label="Vaxt aralığı"><input type="text" data-c="stopNote" data-id="${s.id}" value="${esc(s.note)}" placeholder="qeyd: kimə zəng, bidon sayı" style="flex:1;min-width:140px" aria-label="Qeyd"></div></div>
+    ${ss==='gozlenilir'?`<div class="row" style="gap:4px"><button class="btn sm ghost" data-a="mv" data-id="${s.id}" data-d="-1" ${i?'':'disabled'} aria-label="Yuxarı">↑</button><button class="btn sm ghost" data-a="mv" data-id="${s.id}" data-d="1" ${i<st.length-1?'':'disabled'} aria-label="Aşağı">↓</button><button class="btn sm ghost danger" data-a="rmStop" data-id="${s.id}">Çıxar</button></div>`:''}</div>`}).join('')}</div>`:'<div class="empty small">Marşrut boşdur</div>'}
+   <div class="row"><select id="add_${c.id}" style="flex:1" aria-label="Əlavə ediləcək obyekt">${free.map(o=>`<option value="${o.id}">${esc(o.name)} · ${o.zone}</option>`).join('')}</select><button class="btn" data-a="addStop" data-c="${c.id}" ${free.length?'':'disabled'}>Əlavə et</button></div></section>`}).join('')}</div>`;
+}
+MODALS.sheet=function(){const c=crew(U.modal.c),date=U.rdate,st=stopsOf(date,c.id);
+  return mh('Marşrut vərəqi',`${esc(c.driver)} · ${fd(date)}`)+`<div class="paper"><div class="ph"><div><b style="font-size:15px">${esc(S.company)}</b><div class="pmuted">Gündəlik marşrut vərəqi (internet olmayanda ehtiyat)</div></div><div style="text-align:right">Tarix: <b>${fdy(date)}</b><br>Ekipaj: ${esc(c.driver)}, ${esc(c.helper)}<br>Avtomobil: ${c.car}</div></div>
+  <div class="ptw"><table><thead><tr><th>№</th><th>Obyekt</th><th>Ünvan</th><th>Vaxt</th><th>Telefon</th><th>Giriş / qeyd</th><th>Bidonlar</th></tr></thead><tbody>
+  ${st.map(s=>{const o=obj(s.objectId);return `<tr><td>${s.seq}</td><td><b>${esc(o.name)}</b></td><td>${esc(o.address)}</td><td>${esc(s.win)}</td><td style="white-space:nowrap">${esc(o.phone)}</td><td>${esc([o.access,s.note].filter(Boolean).join(' · '))}</td><td>${atObj(o.id).map(b=>b.id+' ('+b.cap+' L)').join(', ')}</td></tr>`}).join('')}</tbody></table></div></div>
+  <div class="row"><button class="btn pri" data-a="copySheet" data-c="${c.id}">WhatsApp üçün mətni kopyala</button></div>`}
+/* --- ziyarətlər --- */
+function vVisits(){const f=U.f;const vs=S.visits.filter(v=>srvRec(v)&&v.date>=f.from&&v.date<=f.to&&(!f.obj||v.objectId===f.obj)).sort((a,b)=>b.ts-a.ts);
+  return `<div class="row"><label class="field"><span>Başlanğıc</span><input type="date" data-c="f.from" value="${f.from}"></label><label class="field"><span>Son</span><input type="date" data-c="f.to" value="${f.to}"></label><button class="btn" data-a="dl" data-t="vis">CSV yüklə</button></div>
+  <div class="tw"><table><thead><tr><th>Tarix</th><th>Obyekt</th><th>Ekipaj</th><th>Status</th><th class="n">Bidon</th><th>Qalanların səbəbi / götürülməmə</th><th>Təsdiq</th></tr></thead><tbody>
+  ${vs.slice(0,200).map(v=>{const n=S.collections.filter(c=>c.routeId===v.routeId&&!c.voided&&srvRec(c)).length;return `<tr><td class="small">${fdt(v.ts)}</td><td>${esc(obj(v.objectId).name)}</td><td>${esc(crew(v.crewId).driver)}</td><td>${stPill(v.status)}</td><td class="n">${n}</td>
+   <td class="small">${v.skip?esc(v.skip)+(v.skipNote?': '+esc(v.skipNote):''):Object.entries(v.left).map(([b,r])=>`${b}: ${esc(r)}`).join('; ')||'—'}</td><td class="small">${v.sign?esc(v.sign.name):v.noRep?'yox: '+esc(v.noRep):'—'}</td></tr>`}).join('')||'<tr><td colspan="7" class="empty">Yoxdur</td></tr>'}</tbody></table></div>
+  <div class="small muted">“Götürülmədi” miqdarı sıfır olan yığım deyil və hesablaşmaya düşmür.</div>`}
+/* --- sorğular --- */
+function vReqs(){const rs=S.requests.filter(srvRec).sort((a,b)=>(a.status==='gözləyir'?0:1)-(b.status==='gözləyir'?0:1)||b.ts-a.ts);
+  return `<div class="tw"><table><thead><tr><th>Vaxt</th><th>Növ</th><th>Ekipaj</th><th>Aid olduğu</th><th>Səbəb</th><th>Status</th><th></th></tr></thead><tbody>
+  ${rs.map(r=>`<tr><td class="small">${fdt(r.ts)}</td><td>${REQ_T[r.type]}</td><td>${esc(crew(r.crewId)?.driver||'—')}</td><td class="mono small">${r.refId||r.bidonId||'—'}${r.objectId?`<div class="muted">${esc(obj(r.objectId)?.name||'')}</div>`:''}</td><td class="small">${esc(r.reason)}${r.answer?`<div class="muted">Cavab: ${esc(r.answer)}</div>`:''}</td>
+   <td><span class="pill ${r.status==='təsdiqləndi'?'ok':r.status==='rədd edildi'?'crit':'warn'}">${r.status}</span></td><td>${r.status==='gözləyir'?`<button class="btn sm" data-a="reqOpen" data-id="${r.id}">Bax</button>`:''}</td></tr>`).join('')||'<tr><td colspan="7" class="empty">Sorğu yoxdur</td></tr>'}</tbody></table></div>`}
+MODALS.req=function(){const r=S.requests.find(x=>x.id===U.modal.id);const c=r.refId&&S.collections.find(x=>x.id===r.refId);const b=r.bidonId&&bid(r.bidonId);
+  return mh(REQ_T[r.type],`${esc(crew(r.crewId)?.driver||'')} · ${fdt(r.ts)}`)+`<div class="box">${esc(r.reason)}</div>
+  ${c?`<div class="box small">Qeyd: ${c.id} · ${esc(obj(c.objectId).name)} · ${esc(colSum(c))}<br><button class="btn sm" data-a="colOpen" data-id="${c.id}" data-edit="1" style="margin-top:6px">Qeydi aç və düzəlt</button></div>`:''}
+  ${b?`<div class="box small">Bidon ${b.id}: ${esc(locTxt(b.loc))} · ${COND[b.cond]}${r.objectId?`<br>Sorğu yeri: ${esc(obj(r.objectId)?.name||'')}`:''}</div>`:''}
+  ${r.type==='aidiyyet'&&b&&r.objectId?`<label class="row small" style="gap:8px"><input type="checkbox" id="rqMove"> Təsdiqlə: ${b.id} → ${esc(obj(r.objectId).name)} (köçürmə tarixçəyə yazılır, əvvəlki yığımlar dəyişmir)</label>`:''}
+  <label class="field"><span>Cavab / qeyd</span><input type="text" id="rqAns"></label>${errBox(U.modal.err)}
+  <div class="row"><button class="btn pri" data-a="reqDecide" data-v="təsdiqləndi">Təsdiqlə</button><button class="btn danger" data-a="reqDecide" data-v="rədd edildi">Rədd et</button></div>`}
+
+/* ================= RƏHBƏR: OBYEKTLƏR VƏ BİDONLAR ================= */
+function vObyekt(){const k=U.sub.obyekt;return `<main class="wrap"><div class="head"><div><h2>Obyektlər və bidonlar</h2></div></div>${subnav('obyekt')}${({obyektler:vObjs,bidonlar:vBidons,hereket:vMoves})[k]()}</main>`}
+function vObjs(){
+  return `<div class="row" style="justify-content:space-between"><p class="small muted" style="margin:0">Qiymət dəyişəndə yeni qiymət qüvvəyə minmə tarixi ilə yazılır, əvvəlki hesablar yenidən hesablanmır.</p><div class="row"><button class="btn" data-a="dl" data-t="obj">CSV yüklə</button><button class="btn pri" data-a="objNew">+ Yeni obyekt</button></div></div>
+  <div class="tw"><table><thead><tr><th>ID</th><th>Ad</th><th>Əlaqə</th><th>Müqavilə</th><th>Qiymət bazası</th><th class="n">Qiymət</th><th class="n">Tezlik</th><th class="n">Bidon</th><th>Təsdiq</th><th>Qalıq</th><th>Status</th><th></th></tr></thead><tbody>
+  ${S.objects.map(o=>{const b=balance(o.id),p=priceOn(o,TODAY);
+   return `<tr><td class="mono small">${o.id}</td><td><b>${esc(o.name)}</b><div class="small muted">${o.type} · ${esc(o.address)} · ${o.zone}</div></td><td class="small">${esc(o.contact)}<div class="mono">${esc(o.phone)}</div></td>
+   <td>${CONTRACT_S[o.contract]}</td><td class="small">${o.contract==='pulsuz'?'—':BASE[o.base]}</td><td class="n small">${o.contract==='pulsuz'?'—':p.toFixed(2)+' ₼'}${o.prices.length>1?`<div class="muted">${o.prices.length-1} dəyişiklik</div>`:''}</td>
+   <td class="n">${o.freq} gün</td><td class="n">${atObj(o.id).length}</td><td class="small">${o.needSign?'yekunda imza':'—'}</td><td class="small">${balText(b,o)}</td><td>${o.status==='aktiv'?'<span class="pill ok">aktiv</span>':'<span class="pill">dayandırılıb</span>'}</td>
+   <td><div class="row" style="gap:4px;flex-wrap:nowrap"><button class="btn sm" data-a="objEdit" data-id="${o.id}">Redaktə</button>${o.contract!=='pulsuz'?`<button class="btn sm" data-a="price" data-id="${o.id}">Qiymət</button>`:''}</div></td></tr>`}).join('')}</tbody></table></div>`}
+MODALS.obj=function(){const o=U.modal.id?obj(U.modal.id):{name:'',type:'restoran',address:'',zone:'Səbail',contact:'',phone:'+994 ',contract:'biz',base:'litr',freq:3,needSign:false,access:'',status:'aktiv',lat:40.37,lng:49.85,prices:[{price:0.65}]};
+  return mh(U.modal.id?'Obyekti redaktə et':'Yeni obyekt',U.modal.id?o.id:'')+
+  `<div class="form"><label class="field full"><span>Ad</span><input type="text" id="oName" value="${esc(o.name)}"></label>
+  <label class="field"><span>Növ</span><select id="oType">${['restoran','otel','digər'].map(t=>`<option ${o.type===t?'selected':''}>${t}</option>`).join('')}</select></label>
+  <label class="field"><span>Zona / rayon</span><select id="oZone">${['Səbail','Nəsimi','Yasamal','Nərimanov','Xətai','Binəqədi','Nizami','Sabunçu','Xəzər'].map(z=>`<option ${o.zone===z?'selected':''}>${z}</option>`).join('')}</select></label>
+  <label class="field full"><span>Ünvan</span><input type="text" id="oAddr" value="${esc(o.address)}"></label>
+  <label class="field full"><span>Giriş qeydi (ekipaj görür)</span><input type="text" id="oAccess" value="${esc(o.access||'')}" placeholder="məs. arxa qapı, mühafizəyə ad deyin"></label>
+  <label class="field"><span>Əlaqə şəxsi</span><input type="text" id="oContact" value="${esc(o.contact)}"></label><label class="field"><span>Telefon</span><input type="tel" id="oPhone" value="${esc(o.phone)}"></label>
+  <label class="field"><span>Enlik</span><input type="number" step="0.0001" id="oLat" value="${o.lat}"></label><label class="field"><span>Uzunluq</span><input type="number" step="0.0001" id="oLng" value="${o.lng}"></label>
+  <label class="field"><span>Müqavilə şərti</span><select id="oContract">${Object.entries(CONTRACT).map(([k,l])=>`<option value="${k}" ${o.contract===k?'selected':''}>${l}</option>`).join('')}</select></label>
+  <label class="field"><span>Qiymət bazası</span><select id="oBase">${Object.entries(BASE).map(([k,l])=>`<option value="${k}" ${o.base===k?'selected':''}>${l}</option>`).join('')}</select></label>
+  ${U.modal.id?'':`<label class="field"><span>Qiymət, ₼</span><input type="number" step="0.01" min="0" id="oPrice" value="${o.prices[0].price}"></label>`}
+  <label class="field"><span>Yığım tezliyi, gün</span><input type="number" min="1" id="oFreq" value="${o.freq}"></label>
+  <label class="field"><span>Status</span><select id="oStatus"><option value="aktiv" ${o.status==='aktiv'?'selected':''}>aktiv</option><option value="dayandırılıb" ${o.status!=='aktiv'?'selected':''}>dayandırılıb</option></select></label>
+  <label class="row full small" style="gap:8px"><input type="checkbox" id="oSign" ${o.needSign?'checked':''}> Müqavilə üzrə nümayəndə təsdiqi tələb olunur (obyekt yekununda bir dəfə)</label></div>
+  <div class="small muted">Obyekt bizə ödəyirsə, xidmət haqqı yağ miqdarına bağlanmır: “səfər” və ya “sabit aylıq” seçin.</div>
+  ${errBox(U.modal.err)}<button class="btn pri" data-a="saveObj">Yadda saxla</button>`}
+MODALS.price=function(){const o=obj(U.modal.id);return mh('Qiyməti dəyiş',esc(o.name)+' · '+BASE[o.base])+
+  `<div class="tw"><table><thead><tr><th>Qüvvəyə minir</th><th class="n">Qiymət</th></tr></thead><tbody>${o.prices.map(p=>`<tr><td>${fdy(p.from)}</td><td class="n">${p.price.toFixed(2)} ₼</td></tr>`).join('')}</tbody></table></div>
+  <div class="form"><label class="field"><span>Yeni qiymət, ₼</span><input type="number" step="0.01" min="0" id="pNew"></label><label class="field"><span>Qüvvəyə minir</span><input type="date" id="pFrom" value="${addDays(TODAY,1)}" min="${TODAY}"></label></div>
+  <div class="small muted">Hər qeydə tətbiq edilən qiymət həmin qeyddə saxlanır. Keçmiş hesablar dəyişmir.</div>${errBox(U.modal.err)}<button class="btn pri" data-a="savePrice">Qiyməti əlavə et</button>`}
+function vBidons(){
+  const extra=Math.ceil(S.bidons.length*.2);
+  return `<div class="row" style="justify-content:space-between"><p class="small muted" style="margin:0">QR bidonu tanıdır, obyekti yox. Yer, fiziki vəziyyət və doluluq ayrı saxlanır.</p>
+   <div class="row"><button class="btn" data-a="dl" data-t="bid">CSV yüklə</button><button class="btn" data-a="qrToggle">${U.qr?'Stiker vərəqini gizlət':'QR stiker vərəqi'}</button><button class="btn pri" data-a="bidNew">+ Yeni bidonlar</button></div></div>
+  ${U.qr?`<section class="card"><div class="row" style="justify-content:space-between"><h3>Stiker vərəqi · ${S.bidons.length} bidon</h3><span class="small muted">Hər bidona 2 stiker (yan və qapaq), 20% ehtiyat: cəmi ${S.bidons.length*2+extra}. Yağa və istiyə davamlı vinil.</span></div>
+   <div class="stickers">${S.bidons.map(b=>`<div class="sticker"><small><b style="font:600 11px var(--f-sans)">${esc(S.company)}</b></small>${qrEl(b.id)}<b>${b.id}</b><small>${b.cap} L · Tapan zəng etsin:<br>${S.phone}</small></div>`).join('')}</div></section>`:''}
+  <div class="tw"><table><thead><tr><th>Bidon</th><th class="n">Tutum</th><th class="n">Boş çəki</th><th>Yer</th><th>Doluluq</th><th>Vəziyyət</th><th>Təmizlik</th><th>Son yığım</th><th></th></tr></thead><tbody>
+  ${S.bidons.map(b=>{const l=S.collections.filter(c=>c.bidonId===b.id&&srvRec(c)&&!c.voided).reduce((a,c)=>!a||c.ts>a.ts?c:a,null);
+   return `<tr><td class="mono"><b>${b.id}</b></td><td class="n">${b.cap} L</td><td class="n">${q1(b.tare)} kq</td><td>${esc(locTxt(b.loc))}</td><td>${BFILL[b.fill]}</td>
+   <td>${b.cond==='normal'?'Normal':`<span class="pill ${b.cond==='zedeli'?'warn':'crit'}">${COND[b.cond]}</span>`}</td><td class="small">${b.clean?CLEAN[b.clean]:'—'}</td><td class="small">${l?fd(l.date)+' · '+esc(obj(l.objectId).name):'—'}</td>
+   <td><div class="row" style="gap:4px;flex-wrap:nowrap"><button class="btn sm" data-a="bidHist" data-id="${b.id}">Tarixçə</button><button class="btn sm" data-a="bidAct" data-id="${b.id}">Dəyiş</button></div></td></tr>`}).join('')}</tbody></table></div>
+  <p class="small muted">Aidiyyəti yalnız rəhbər dəyişir. Bidon köçürüldükdə əvvəlki yığımların obyekti dəyişmir.</p>`}
+MODALS.bidNew=function(){return mh('Yeni bidonlar','Hər fiziki bidona dəyişməyən unikal kod verilir')+
+  `<div class="form"><label class="field"><span>Say</span><input type="number" min="1" max="200" id="bnN" value="2"></label>
+  <label class="field"><span>Tutum, litr</span><select id="bnCap">${CAPS.map(c=>`<option>${c}</option>`).join('')}<option value="x">digər</option></select></label>
+  <label class="field"><span>Digər tutum, L</span><input type="number" min="1" id="bnCapX" placeholder="yalnız “digər” üçün"></label>
+  <label class="field"><span>Boş çəki, kq (boş: avtomatik)</span><input type="number" step="0.1" id="bnTare"></label>
+  <label class="field full"><span>Harada</span><select id="bnObj"><option value="">Anbar</option>${S.objects.map(o=>`<option value="${o.id}">${esc(o.name)}</option>`).join('')}</select></label></div>
+  ${errBox(U.modal.err)}<button class="btn pri" data-a="saveBid">Yarat</button>`}
+MODALS.bidHist=function(){const b=bid(U.modal.id);const mv=S.moves.filter(m=>m.bidonId===b.id).sort((a,c)=>c.ts-a.ts);const cs=S.collections.filter(c=>c.bidonId===b.id&&srvRec(c)).sort((a,c)=>c.ts-a.ts).slice(0,20);
+  return mh('Bidon '+b.id,`${b.cap} L · ${esc(locTxt(b.loc))} · ${COND[b.cond]} · ${BFILL[b.fill]}`)+
+  `<div class="field"><span>Hərəkət və vəziyyət tarixçəsi</span><div class="tw"><table><thead><tr><th>Vaxt</th><th>Hərəkət</th><th>Səbəb</th><th>İstifadəçi</th></tr></thead><tbody>${mv.map(m=>`<tr><td class="small">${fdt(m.ts)}</td><td class="small">${m.kind==='yer'?`${esc(locTxt(m.from))} → ${esc(locTxt(m.to))}`:`vəziyyət: ${COND[m.fromC]} → ${COND[m.toC]}`}</td><td class="small">${esc(m.why)}</td><td class="small">${esc(m.by||'')}</td></tr>`).join('')}</tbody></table></div></div>
+  <div class="field"><span>Son yığımlar</span><div class="tw"><table><tbody>${cs.map(c=>`<tr class="${c.voided?'strike':''}"><td class="small">${fdt(c.ts)}</td><td>${esc(obj(c.objectId).name)}</td><td class="small">${OP_S[c.op]}</td><td class="n">${esc(qtyTxt(c))}</td></tr>`).join('')||'<tr><td class="empty">Yoxdur</td></tr>'}</tbody></table></div></div>`}
+MODALS.bidAct=function(){const b=bid(U.modal.id),M=U.modal;const spares=S.bidons.filter(x=>x.loc.t==='anbar'&&x.cond==='normal'&&x.id!==b.id);
+  return mh('Bidonu dəyiş: '+b.id,esc(locTxt(b.loc))+' · '+COND[b.cond])+
+  `<div class="seg">${[['move','Başqa obyektə köçür'],['swap','Bidonu əvəzlə'],['cond','Vəziyyət']].map(([k,l])=>`<button class="${M.k===k?'on':''}" data-a="bidK" data-k="${k}">${l}</button>`).join('')}</div>
+  ${M.k==='move'?`<label class="field"><span>Yeni yer</span><select id="baTo"><option value="A">Anbar</option>${S.objects.map(o=>`<option value="${o.id}" ${b.loc.id===o.id?'disabled':''}>${esc(o.name)}</option>`).join('')}</select></label>`
+   :M.k==='swap'?`<div class="small muted">Köhnə bidon anbara qaytarılır, yeni bidon onun yerinə qoyulur. Köhnə və yeni kod, səbəb, vaxt və istifadəçi tarixçədə qalır.</div>
+     <div class="form"><label class="field"><span>Yeni bidon (anbardan)</span><select id="baNew">${spares.map(x=>`<option value="${x.id}">${x.id} · ${x.cap} L</option>`).join('')}</select></label>
+     <label class="field"><span>Köhnə bidonun vəziyyəti</span><select id="baOldC">${Object.entries(COND).map(([k,l])=>`<option value="${k}" ${k==='zedeli'?'selected':''}>${l}</option>`).join('')}</select></label></div>`
+   :`<label class="field"><span>Fiziki vəziyyət</span><select id="baCond">${Object.entries(COND).map(([k,l])=>`<option value="${k}" ${b.cond===k?'selected':''}>${l}</option>`).join('')}</select></label>
+     ${b.loc.t==='anbar'?`<label class="field"><span>Təmizlik</span><select id="baClean">${Object.entries(CLEAN).map(([k,l])=>`<option value="${k}" ${b.clean===k?'selected':''}>${l}</option>`).join('')}</select></label>`:''}`}
+  <label class="field"><span>Səbəb (məcburi)</span><input type="text" id="baWhy"></label>${errBox(M.err)}<button class="btn pri" data-a="bidActSave">Saxla</button>`}
+function vMoves(){const mv=[...S.moves].sort((a,b)=>b.ts-a.ts).slice(0,200);
+  return `<div class="row"><button class="btn" data-a="dl" data-t="mv">CSV yüklə</button><span class="small muted">Nəqliyyat, anbar və obyekt arasında bütün hərəkətlər və vəziyyət dəyişiklikləri.</span></div>
+  <div class="tw"><table><thead><tr><th>Vaxt</th><th>Bidon</th><th>Haradan</th><th>Haraya / vəziyyət</th><th>Səbəb</th><th>İstifadəçi</th></tr></thead><tbody>
+  ${mv.map(m=>`<tr><td class="small">${fdt(m.ts)}</td><td class="mono">${m.bidonId}</td><td class="small">${m.kind==='yer'?esc(locTxt(m.from)):COND[m.fromC]}</td><td class="small">${m.kind==='yer'?esc(locTxt(m.to)):COND[m.toC]}</td><td class="small">${esc(m.why)}</td><td class="small">${esc(m.by||'')}</td></tr>`).join('')}</tbody></table></div>`}
+
+/* ================= RƏHBƏR: MALİYYƏ ================= */
+function vMaliyye(){const k=U.sub.maliyye;return `<main class="wrap"><div class="head"><div><h2>Maliyyə</h2></div></div>${subnav('maliyye')}${({hesab:vSettle,odenis:vPays,anbar:vStock,xerc:vExp})[k]()}</main>`}
+function vSettle(){const mo=U.chgMonth;
+  return `<div class="row" style="justify-content:space-between"><p class="small muted" style="margin:0">Təxmini yığım yekun borc yaratmır: ölçü yoxdursa hesab “dəqiqləşdirmə gözləyir” qalır.</p>
+   <div class="row"><input type="month" data-c="chgMonth" value="${mo}" aria-label="Ay"><button class="btn" data-a="genChg">Aylıq sabit haqları yaz</button></div></div>
+  <div class="tw"><table><thead><tr><th>Obyekt</th><th>Müqavilə</th><th class="n">Hesablanıb</th><th class="n">Ödənilib</th><th>Qalıq</th><th class="n">Dəqiqləşdirmə gözləyir</th><th></th></tr></thead><tbody>
+  ${S.objects.map(o=>{const L=ledger(o.id);const acc=L.filter(e=>!e.pay).reduce((a,e)=>a+Math.abs(e.amt)*(e.kind.startsWith('Ləğv')?-1:1),0),pd=L.filter(e=>e.pay).reduce((a,e)=>a+Math.abs(e.amt),0),b=balance(o.id),pe=pendEst(o.id);
+   return `<tr><td>${esc(o.name)}</td><td class="small">${CONTRACT_S[o.contract]}${o.contract!=='pulsuz'?' · '+BASE[o.base]:''}</td><td class="n">${money(acc)}</td><td class="n">${money(pd)}</td><td class="small" style="color:${(o.contract==='biz'&&b<0)||(o.contract==='obyekt'&&b>0)?'var(--warn)':Math.abs(b)<.005?'var(--muted)':'var(--ok)'}">${balText(b,o)}</td>
+   <td class="n small">${pe.n?`${pe.n} yığım · ≈ ${q1(pe.kg)} kq`:'—'}</td><td><button class="btn sm" data-a="ledger" data-id="${o.id}">Hesab çıxarışı</button></td></tr>`}).join('')}</tbody></table></div>`}
+MODALS.ledger=function(){const o=obj(U.modal.id);let run=0;const L=ledger(o.id);
+  return mh('Hesab çıxarışı',esc(o.name)+' · '+CONTRACT[o.contract])+`<div class="tw"><table><thead><tr><th>Tarix</th><th>Növ</th><th>Qeyd</th><th>Təfsilat</th><th class="n">Məbləğ</th><th class="n">Qalıq</th></tr></thead><tbody>
+  ${L.map(e=>{run=r2(run+e.amt);return `<tr><td class="small">${fdy(e.date)}</td><td class="small">${e.kind}</td><td class="mono small">${e.ref}</td><td class="small">${esc(e.txt)}</td><td class="n">${e.amt>0?'+':''}${money(e.amt)}</td><td class="n small">${money(run)}</td></tr>`}).join('')||'<tr><td colspan="6" class="empty">Hərəkət yoxdur</td></tr>'}</tbody></table></div>
+  <div class="small muted">“+” obyekt bizə borclu tərəfə, “−” biz obyektə borclu tərəfə. Yekun: ${balText(run,o)}.</div>`}
+function vPays(){const ps=[...S.payments].sort((a,b)=>b.date.localeCompare(a.date)||(b.createdAt||0)-(a.createdAt||0));
+  return `<div class="row" style="justify-content:space-between"><p class="small muted" style="margin:0">Ödəniş istiqaməti, məbləğ, tarix, üsul və aid olduğu hesab ayrıca yazılır. Qismən ödəniş qalıqda, artıq ödəniş avans kimi görünür.</p><div class="row"><button class="btn" data-a="dl" data-t="pay">CSV yüklə</button><button class="btn pri" data-a="payNew">+ Ödəniş yaz</button></div></div>
+  <div class="tw"><table><thead><tr><th>ID</th><th>Tarix</th><th>Obyekt</th><th>İstiqamət</th><th class="n">Məbləğ</th><th>Üsul</th><th>Aid olduğu hesab</th><th>Qeyd</th></tr></thead><tbody>
+  ${ps.slice(0,100).map(p=>`<tr><td class="mono small">${p.id}</td><td>${fd(p.date)}</td><td>${esc(obj(p.objectId).name)}</td><td>${p.dir==='out'?'<span class="pill warn">biz ödədik</span>':'<span class="pill ok">obyekt ödədi</span>'}</td><td class="n">${money(p.amount)}</td><td>${p.method}</td><td class="small">${esc(p.ref||'—')}</td><td class="small">${esc(p.note||'')}</td></tr>`).join('')}</tbody></table></div>`}
+MODALS.pay=function(){return mh('Ödəniş yaz','')+
+  `<div class="form"><label class="field"><span>Tarix</span><input type="date" id="pyDate" value="${TODAY}"></label><label class="field"><span>Obyekt</span><select id="pyObj">${S.objects.filter(o=>o.contract!=='pulsuz').map(o=>`<option value="${o.id}">${esc(o.name)} · ${balText(balance(o.id),o)}</option>`).join('')}</select></label>
+  <label class="field"><span>İstiqamət</span><select id="pyDir"><option value="out">Biz obyektə ödədik</option><option value="in">Obyekt bizə ödədi</option></select></label>
+  <label class="field"><span>Məbləğ, ₼</span><input type="number" inputmode="decimal" step="0.01" id="pyAmt"></label><label class="field"><span>Üsul</span><select id="pyM"><option>nağd</option><option>köçürmə</option><option>kart</option></select></label>
+  <label class="field"><span>Aid olduğu hesab</span><input type="text" id="pyRef" list="pyRefs" placeholder="məs. SV-2026-0007 və ya Avans"><datalist id="pyRefs"><option value="Avans">${S.reports.map(r=>`<option value="${r.no}">`).join('')}</datalist></label>
+  <label class="field full"><span>Qeyd</span><input type="text" id="pyNote"></label></div>${errBox(U.modal.err)}<button class="btn pri" data-a="savePay">Yadda saxla</button>`}
+function vStock(){const P=stockParts(),bd=buyerDebt();
+  const led=[...(S.stock.opening?[{date:S.stock.opening.date,t:'Başlanğıc qalıq (inventar)',kg:S.stock.opening.kg,ref:'',by:S.stock.opening.by}]:[]),
+    ...S.batches.map(b=>({date:b.date,t:'Faktiki qəbul · '+crew(b.crewId).driver,kg:b.net,ref:b.id,by:b.by})),...S.sales.map(s=>({date:s.date,t:'Satış çıxışı · '+s.buyer,kg:-s.kg,ref:s.id,by:''})),
+    ...S.stock.adj.map(a=>({date:a.date,t:'Düzəliş: '+a.reason,kg:a.kg,ref:a.id,by:a.by}))].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,40);
+  return `<div class="kpis">${kpi('Başlanğıc qalıq',q1(P.op)+' kq',S.stock.opening?esc(S.stock.opening.note):'daxil edilməyib',S.stock.opening?fdy(S.stock.opening.date)+' · kq':'—')}
+   ${kpi('Faktiki qəbul','+'+q1(P.inn)+' kq',S.batches.length+' partiya','bütün dövr · kq')}${kpi('Faktiki çıxış','−'+q1(P.out)+' kq',S.sales.length+' satış','bütün dövr · kq')}
+   ${kpi('Təsdiqlənmiş düzəliş',(P.adj>0?'+':'')+q1(P.adj)+' kq',S.stock.adj.length+' qeyd','bütün dövr · kq')}${kpi('Anbar qalığı',q1(P.total)+' kq','başlanğıc + qəbul − çıxış ± düzəliş',fdy(TODAY)+' · kq')}</div>
+  <div class="row"><button class="btn" data-a="opening">Başlanğıc qalıq (inventar)</button><button class="btn" data-a="adjNew">Düzəliş yaz</button><button class="btn pri" data-a="saleNew">+ Satış (fiziki çıxış)</button><button class="btn" data-a="bpayNew">+ Alıcıdan ödəniş</button></div>
+  <div class="grid2"><section class="card"><h3>Anbar hərəkəti</h3><div class="tw"><table><thead><tr><th>Tarix</th><th>Hərəkət</th><th>Qeyd</th><th class="n">kq</th></tr></thead><tbody>${led.map(l=>`<tr><td class="small">${fd(l.date)}</td><td class="small">${esc(l.t)}</td><td class="mono small">${l.ref}</td><td class="n">${l.kg>0?'+':''}${q1(l.kg)}</td></tr>`).join('')}</tbody></table></div></section>
+  <section class="card"><h3>Alıcılar: çıxış və pul ayrıca</h3><div class="tw"><table><thead><tr><th>Alıcı</th><th class="n">Təhvil, kq</th><th class="n">Məbləğ</th><th class="n">Alınıb</th><th class="n">Borc</th></tr></thead><tbody>
+   ${Object.entries(bd).map(([n,b])=>`<tr><td>${esc(n)}</td><td class="n">${q1(b.kg)}</td><td class="n">${money(b.amt)}</td><td class="n">${money(b.paid)}</td><td class="n" style="color:${b.amt-b.paid>0?'var(--warn)':'var(--muted)'}">${b.amt-b.paid<0?'avans '+money(b.paid-b.amt):money(b.amt-b.paid)}</td></tr>`).join('')}</tbody></table></div>
+   <h3>Satışlar</h3><div class="tw"><table><thead><tr><th>ID</th><th>Tarix</th><th>Alıcı</th><th class="n">kq</th><th class="n">₼/kq</th><th class="n">Məbləğ</th></tr></thead><tbody>${[...S.sales].reverse().map(s=>`<tr><td class="mono small">${s.id}</td><td>${fd(s.date)}</td><td>${esc(s.buyer)}</td><td class="n">${q1(s.kg)}</td><td class="n">${s.price.toFixed(2)}</td><td class="n">${money(s.amount)}</td></tr>`).join('')}</tbody></table></div>
+   <h3>Alıcı ödənişləri</h3><div class="tw"><table><tbody>${[...S.buyerPays].reverse().map(p=>`<tr><td>${fd(p.date)}</td><td>${esc(p.buyer)}</td><td class="small">${p.saleId||''} ${esc(p.note||'')}</td><td class="n">${money(p.amount)}</td></tr>`).join('')||'<tr><td class="empty">Yoxdur</td></tr>'}</tbody></table></div></section></div>`}
+MODALS.sale=function(){return mh('Satış: fiziki çıxış','Mövcud qalıq: '+q1(stockAt())+' kq')+`<div class="form"><label class="field"><span>Tarix</span><input type="date" id="slDate" value="${TODAY}" max="${TODAY}"></label><label class="field"><span>Alıcı</span><input type="text" id="slBuyer" list="buyers"><datalist id="buyers">${Object.keys(buyerDebt()).map(b=>`<option value="${esc(b)}">`).join('')}</datalist></label>
+  <label class="field"><span>Təhvil verilən, kq</span><input type="number" inputmode="decimal" id="slKg"></label><label class="field"><span>Qiymət, ₼/kq</span><input type="number" inputmode="decimal" step="0.01" id="slPrice" value="1.00"></label>
+  <label class="field full"><span>Qeyd</span><input type="text" id="slNote"></label></div><div class="small muted">Pul alınması ayrıca “Alıcıdan ödəniş” ilə yazılır.</div>${errBox(U.modal.err)}<button class="btn pri" data-a="saveSale">Yadda saxla</button>`}
+MODALS.bpay=function(){return mh('Alıcıdan ödəniş','')+`<div class="form"><label class="field"><span>Tarix</span><input type="date" id="bpDate" value="${TODAY}"></label><label class="field"><span>Alıcı</span><select id="bpBuyer">${Object.entries(buyerDebt()).map(([n,b])=>`<option value="${esc(n)}">${esc(n)} · borc ${money(b.amt-b.paid)}</option>`).join('')}</select></label>
+  <label class="field"><span>Məbləğ, ₼</span><input type="number" inputmode="decimal" step="0.01" id="bpAmt"></label><label class="field"><span>Üsul</span><select id="bpM"><option>köçürmə</option><option>nağd</option></select></label>
+  <label class="field"><span>Satış (istəyə görə)</span><select id="bpSale"><option value="">—</option>${S.sales.map(s=>`<option value="${s.id}">${s.id} · ${esc(s.buyer)} · ${money(s.amount)}</option>`).join('')}</select></label></div>${errBox(U.modal.err)}<button class="btn pri" data-a="saveBPay">Yadda saxla</button>`}
+MODALS.opening=function(){const o=S.stock.opening||{};return mh('Başlanğıc qalıq','İnventar sayımı ilə daxil edilir')+`<div class="form"><label class="field"><span>Sayım tarixi</span><input type="date" id="opDate" value="${o.date||TODAY}"></label><label class="field"><span>Sayılan qalıq, kq</span><input type="number" inputmode="decimal" step="0.1" id="opKg" value="${o.kg??''}"></label>
+  <label class="field full"><span>Qeyd</span><input type="text" id="opNote" value="${esc(o.note||'İnventar sayımı')}"></label></div>${o.date?'<div class="warnbox">Dəyişiklik tarixçəyə yazılır.</div>':''}${errBox(U.modal.err)}<button class="btn pri" data-a="saveOpening">Saxla</button>`}
+MODALS.adj=function(){return mh('Anbar düzəlişi','Səbəbli və tarixçəli')+`<div class="form"><label class="field"><span>Tarix</span><input type="date" id="adDate" value="${TODAY}"></label><label class="field"><span>Dəyişiklik, kq (+/−)</span><input type="number" step="0.1" id="adKg"></label>
+  <label class="field full"><span>Səbəb (məcburi)</span><input type="text" id="adWhy" placeholder="məs. inventar sayımı"></label></div>${errBox(U.modal.err)}<button class="btn pri" data-a="saveAdj">Təsdiqlə və yaz</button>`}
+function vExp(){
+  const ms=monthStart(TODAY);const ex=[...S.expenses].sort((a,b)=>b.ts-a.ts);const okM=S.expenses.filter(e=>e.date>=ms&&e.status==='təsdiqləndi');const totM=okM.reduce((a,e)=>a+e.amount,0);
+  const adv=S.crews.filter(c=>c.status==='aktiv').map(c=>{const a=S.advances.filter(x=>x.crewId===c.id).reduce((s,x)=>s+x.amount,0);const sp=S.expenses.filter(e=>e.crewId===c.id&&e.status!=='rədd edildi').reduce((s,e)=>s+e.amount,0);return {c,a,sp}});
+  return `<p class="small muted" style="margin:0">Xərc uçotu ekipajın əsas yığım axınından ayrı saxlanır.</p>
+  <div class="kpis">${kpi('Təsdiqlənmiş xərc',money(totM),okM.length+' xərc',fd(ms)+' – '+fd(TODAY)+' · ₼')}${kpi('Təsdiq gözləyir',S.expenses.filter(e=>e.status==='gözləyir').length,'ekipajdan','hazırda · ədəd')}</div>
+  <section class="card"><h3>Avans qalığı</h3><div class="tw"><table><thead><tr><th>Ekipaj</th><th class="n">Verilən</th><th class="n">Xərc</th><th class="n">Qalıq</th></tr></thead><tbody>${adv.map(x=>`<tr><td>${esc(x.c.driver)}</td><td class="n">${money(x.a)}</td><td class="n">${money(x.sp)}</td><td class="n">${money(x.a-x.sp)}</td></tr>`).join('')}</tbody></table></div>
+   <div class="row"><select id="advCrew" aria-label="Ekipaj">${adv.map(x=>`<option value="${x.c.id}">${esc(x.c.driver)}</option>`).join('')}</select><input type="number" id="advAmt" value="50" style="width:100px" aria-label="Avans məbləği"><button class="btn" data-a="addAdv">Avans yaz</button></div></section>
+  <div class="tw"><table><thead><tr><th>Tarix</th><th>Ekipaj</th><th>Növ</th><th class="n">Məbləğ</th><th>Çek</th><th>Status</th><th></th></tr></thead><tbody>
+  ${ex.slice(0,60).map(e=>`<tr><td class="small">${fdt(e.ts)}</td><td>${esc(crew(e.crewId).driver)}</td><td>${EXP_T[e.type]}</td><td class="n">${money(e.amount)}</td><td>${e.photo?'var':'<span class="pill warn">çeksiz</span>'}</td><td>${stExp(e.status)}</td>
+   <td>${e.status==='gözləyir'?`<div class="row" style="gap:4px;flex-wrap:nowrap"><button class="btn sm" data-a="expOk" data-id="${e.id}">Təsdiqlə</button><button class="btn sm danger" data-a="expNo" data-id="${e.id}">Rədd</button></div>`:''}</td></tr>`).join('')}</tbody></table></div>`}
+
+/* ================= RƏHBƏR: HESABATLAR ================= */
+function vHesabat(){const k=U.sub.hesabat;return `<main class="wrap"><div class="head"><div><h2>Hesabatlar</h2></div></div>${subnav('hesabat')}${({sverka:vSverka,ixrac:vExport,ehtiyat:vBackup,ayar:vSettings})[k]()}</main>`}
+function period(p){if(p==='dunen')return [addDays(TODAY,-1),addDays(TODAY,-1)];if(p==='hefte')return [weekStart(TODAY),TODAY];if(p==='ay')return [monthStart(TODAY),TODAY];
+  if(p==='kecenay'){const e=addDays(monthStart(TODAY),-1);return [monthStart(e),e]}return [U.sv.from,U.sv.to]}
+function buildRep(oid,from,to){const o=obj(oid),L=ledger(oid);const open=r2(L.filter(e=>e.date<from).reduce((a,e)=>a+e.amt,0));const inP=L.filter(e=>e.date>=from&&e.date<=to);
+  const acc=r2(inP.filter(e=>!e.pay).reduce((a,e)=>a+e.amt,0)),paid=r2(inP.filter(e=>e.pay).reduce((a,e)=>a+e.amt,0));
+  const cols=S.collections.filter(c=>c.objectId===oid&&srvRec(c)&&c.date>=from&&c.date<=to).sort((a,b)=>a.ts-b.ts);
+  const visits=S.visits.filter(v=>v.objectId===oid&&srvRec(v)&&v.date>=from&&v.date<=to).sort((a,b)=>a.ts-b.ts);
+  return {o,from,to,cols,visits,lines:inP,open,acc,paid,close:r2(open+acc+paid)}}
+function vSverka(){const sv=U.sv,[from,to]=period(sv.preset);
+  return `<section class="card"><div class="row" style="align-items:flex-end"><label class="field"><span>Obyekt</span><select data-c="sv.obj">${S.objects.map(o=>`<option value="${o.id}" ${sv.obj===o.id?'selected':''}>${esc(o.name)}</option>`).join('')}</select></label>
+   <div class="field"><span>Dövr</span><div class="seg">${[['dunen','Dünən'],['hefte','Bu həftə'],['ay','Bu ay'],['kecenay','Keçən ay'],['xususi','Xüsusi']].map(([k,l])=>`<button class="${sv.preset===k?'on':''}" data-a="svPreset" data-k="${k}">${l}</button>`).join('')}</div></div>
+   ${sv.preset==='xususi'?`<label class="field"><span>Başlanğıc</span><input type="date" data-c="sv.from" value="${sv.from}"></label><label class="field"><span>Son</span><input type="date" data-c="sv.to" value="${sv.to}"></label>`:''}
+   <button class="btn pri" data-a="genRep">Hesabat çıxar</button></div><div class="small muted">Dövr: ${fdy(from)} – ${fdy(to)}</div>
+   ${to>=TODAY&&!S.closed[TODAY]?'<div class="warnbox">Bugünkü marşrut hələ bağlanmayıb, hesabat natamam ola bilər.</div>':''}</section>
+  <section class="card"><h3>Hesabat arxivi</h3><div class="tw"><table><thead><tr><th>№</th><th>Obyekt</th><th>Dövr</th><th>Versiya</th><th>Yaradılıb</th><th>Status</th><th></th></tr></thead><tbody>
+  ${[...S.reports].reverse().map(r=>`<tr><td class="mono">${r.no}</td><td>${esc(obj(r.objectId).name)}</td><td class="small">${fdy(r.from)} – ${fdy(r.to)}</td><td>v${r.version}</td><td class="small">${fdt(r.createdAt)}</td><td>${r.status}</td><td><button class="btn sm" data-a="openRep" data-no="${r.no}">Aç</button></td></tr>`).join('')||'<tr><td colspan="7" class="empty">Hələ hesabat yoxdur</td></tr>'}</tbody></table></div></section>`}
+function makeReport(oid,from,to){let r=S.reports.find(x=>x.objectId===oid&&x.from===from&&x.to===to);
+  if(r){const changed=S.collections.some(c=>c.objectId===oid&&c.date>=from&&c.date<=to&&((c.serverTs||0)>r.createdAt||c.edits.some(e=>e.at>r.createdAt)||(c.voidAt||0)>r.createdAt))||S.payments.some(p=>p.objectId===oid&&p.date>=from&&p.date<=to&&(p.createdAt||0)>r.createdAt);
+    if(changed){r.versions.push({version:r.version,createdAt:r.createdAt,status:r.status});r.version++;r.createdAt=Date.now();r.status='hazırlanıb'}return r}
+  r={no:'SV-'+TODAY.slice(0,4)+'-'+pad(++S.seq.rep).padStart(4,'0'),objectId:oid,from,to,version:1,createdAt:Date.now(),status:'hazırlanıb',dispute:'',versions:[]};S.reports.push(r);return r}
+MODALS.report=function(){const r=S.reports.find(x=>x.no===U.modal.no),R=buildRep(r.objectId,r.from,r.to),o=R.o;
+  const dirLbl=b=>Math.abs(b)<.005?'0,00 ₼':(b>0?'obyekt bizə ':'biz obyektə ')+money(Math.abs(b));
+  const live=R.cols.filter(c=>!c.voided),meas=live.filter(c=>c.mode==='olcu'),est=live.filter(c=>c.mode!=='olcu');const u=o.base==='kq'?'kq':'litr';
+  const nonCol=R.lines.filter(e=>!e.pay&&e.kind!=='Yığım');
+  return mh('Sverka '+r.no,`versiya ${r.version} · ${r.status}`)+
+  `<div class="paper"><div class="ph"><div class="row" style="align-items:flex-start;gap:12px"><div class="logo">${ICON.drop}</div><div><b style="font-size:16px">${esc(S.company)}</b><div class="pmuted">Atıq yağ yığımı üzrə üzləşmə aktı</div><div class="pmuted">${S.phone}</div></div></div>
+   <div style="text-align:right"><b>№ ${r.no} / v${r.version}</b><div>Yaradılıb: ${fdt(r.createdAt)}</div><div>Dövr: ${fdy(r.from)} – ${fdy(r.to)}</div></div></div>
+   <div class="row" style="justify-content:space-between;align-items:flex-start"><div><b>${esc(o.name)}</b><div>${esc(o.address)}</div><div>Əlaqə: ${esc(o.contact)}, ${esc(o.phone)}</div></div><div>Müqavilə: <b>${CONTRACT[o.contract]}</b>${o.contract!=='pulsuz'?`<div>Baza: ${BASE[o.base]}</div>`:''}</div></div>
+   <div><b>Yığımlar</b><div class="ptw"><table><thead><tr><th>№</th><th>Tarix</th><th>Bidon</th><th>İlkin</th><th class="n">${u}</th><th>Dəqiqlik</th><th class="n">Qiymət</th><th class="n">Məbləğ</th></tr></thead><tbody>
+   ${R.cols.map((c,i)=>`<tr class="${c.voided?'strike':''}"><td>${i+1}</td><td style="white-space:nowrap">${fdy(c.date)} ${ft(c.ts)}</td><td>${c.bidonId}</td><td>${esc(qtyTxt(c))}</td><td class="n">${q1(colIn(c,u))}</td><td>${c.mode==='olcu'?'ölçülmüş':'təxmini'}</td>
+    <td class="n">${c.k.contract==='pulsuz'||c.k.base==='sefer'||c.k.base==='dovr'?'—':c.k.priceAt.toFixed(2)}</td><td class="n">${c.amtSt==='hesablandı'?money(c.amount):c.amtSt==='gözləyir'?'dəqiqləşdirmə gözləyir':'—'}</td></tr>`).join('')||'<tr><td colspan="8" class="pmuted">Dövrdə yığım olmayıb</td></tr>'}
+   <tr><td colspan="4"><b>Cəmi: ölçülmüş ${q1(meas.reduce((a,c)=>a+colIn(c,u),0))} ${u}, təxmini ≈ ${q1(est.reduce((a,c)=>a+colIn(c,u),0))} ${u}</b></td><td colspan="4"></td></tr></tbody></table></div>
+   ${est.length&&o.contract==='biz'&&(o.base==='kq'||o.base==='litr')?'<div class="pmuted">Təxmini yığımlar üzrə yekun borc yaradılmayıb, ölçü dəqiqləşdirildikdən sonra hesablanır.</div>':''}</div>
+   ${nonCol.length?`<div><b>Səfər / aylıq haqlar və əks qeydlər</b><div class="ptw"><table><tbody>${nonCol.map(e=>`<tr><td>${fdy(e.date)}</td><td>${e.kind}</td><td>${esc(e.txt)}</td><td class="n">${money(Math.abs(e.amt))}</td></tr>`).join('')}</tbody></table></div></div>`:''}
+   ${R.visits.filter(v=>v.status==='goturulmedi').length?`<div><b>Götürülməyən gəlişlər</b><div class="ptw"><table><tbody>${R.visits.filter(v=>v.status==='goturulmedi').map(v=>`<tr><td>${fdy(v.date)}</td><td>${esc(v.skip)}</td></tr>`).join('')}</tbody></table></div></div>`:''}
+   <div><b>Ödənişlər</b><div class="ptw"><table><tbody>${R.lines.filter(e=>e.pay).map(e=>`<tr><td>${fdy(e.date)}</td><td>${e.kind}</td><td>${esc(e.txt)}</td><td class="n">${money(Math.abs(e.amt))}</td></tr>`).join('')||'<tr><td class="pmuted">Dövrdə ödəniş olmayıb</td></tr>'}</tbody></table></div></div>
+   <div><b>Qalıq</b><div class="ptw"><table><tbody><tr><td>Dövrün əvvəlinə</td><td class="n">${dirLbl(R.open)}</td></tr><tr><td>Dövrdə hesablanan</td><td class="n">${dirLbl(R.acc)}</td></tr><tr><td>Dövrdə ödənilən</td><td class="n">${money(Math.abs(R.paid))}</td></tr><tr><td><b>Dövrün sonuna</b></td><td class="n"><b>${balText(R.close,o)}</b></td></tr></tbody></table></div></div>
+   <div class="sigs"><div>${esc(S.company)}<br>imza, tarix</div><div>${esc(o.name)}<br>imza, tarix</div></div></div>
+  ${r.versions.length?`<div class="small muted">Arxivdə köhnə versiyalar: ${r.versions.map(v=>'v'+v.version+' ('+fdt(v.createdAt)+')').join(', ')}</div>`:''}
+  <div class="form"><label class="field"><span>Status</span><select id="mrStatus">${['hazırlanıb','göndərilib','razılaşdırılıb','mübahisəlidir'].map(s=>`<option ${r.status===s?'selected':''}>${s}</option>`).join('')}</select></label><label class="field"><span>Mübahisənin səbəbi</span><input type="text" id="mrWhy" value="${esc(r.dispute)}"></label></div>
+  <div class="row"><button class="btn pri" data-a="saveRepStatus">Statusu saxla</button><button class="btn" data-a="dlRep" data-no="${r.no}">CSV yüklə</button></div>`}
+const EXPORTS=[['col','Yığımlar'],['vis','Obyekt ziyarətləri'],['batch','Anbar partiyaları'],['bid','Bidonlar'],['mv','Bidon hərəkətləri'],['obj','Obyektlər'],['pay','Ödənişlər'],['sale','Satışlar və alıcı ödənişləri']];
+function vExport(){return `<section class="card"><h3>CSV / Excel ixracı</h3><p class="small muted" style="margin:0">Tarix, obyekt, bidon, vahid, dəqiqlik və status ayrıca sütunlardadır. Fayl Excel-də birbaşa açılır (UTF-8). Yığımlar “Əməliyyatlar” bölməsindəki süzgəcə görə ixrac olunur.</p>
+  <div class="list">${EXPORTS.map(([k,l])=>`<div class="li"><b>${l}</b><button class="btn sm" data-a="dl" data-t="${k}">Yüklə</button></div>`).join('')}</div></section>`}
+function vBackup(){return `<section class="card"><h3>Ehtiyat nüsxə</h3><p class="small muted" style="margin:0">Bütün məlumatın tam nüsxəsi (JSON). Real sistemdə gündəlik avtomatik ehtiyat nüsxə serverdə saxlanılmalı və bərpa sınağı icraçı tərəfindən nümayiş etdirilməlidir.</p>
+  <div class="li"><div><b>Son nüsxə</b><div class="small muted">${S.lastBackup?fdt(S.lastBackup):'hələ alınmayıb'}</div></div><button class="btn pri" data-a="backup">Nüsxəni yüklə</button></div>
+  <div class="li"><div><b>Nüsxədən bərpa</b><div class="small muted">Hazırkı məlumat nüsxədəki ilə əvəzlənir</div></div><label class="btn">Fayl seç<input type="file" accept="application/json,.json" data-a="restore" hidden></label></div></section>`}
+MODALS.restore=function(){const d=U.modal.data;return mh('Bərpanı təsdiqlə','')+`<div class="warnbox">Hazırkı məlumat nüsxə ilə əvəzlənəcək: ${d.objects.length} obyekt, ${d.collections.length} yığım, ${d.batches.length} partiya, ${d.payments.length} ödəniş.</div>
+  <div class="row"><button class="btn" data-a="close">Ləğv et</button><button class="btn pri" data-a="doRestore">Bərpa et</button></div>`}
+function vSettings(){const s=S.settings;return `<section class="card"><h3>Tənzimləmələr</h3><div class="form">
+  <label class="field"><span>Anbar fərqi həddi: ölçülmüş, %</span><input type="number" min="0" step="0.5" data-c="set.thrMeas" value="${s.thrMeas}"></label>
+  <label class="field"><span>Anbar fərqi həddi: təxmini daxil, %</span><input type="number" min="0" step="0.5" data-c="set.thrEst" value="${s.thrEst}"></label>
+  <label class="field"><span>Ekipajın düzəliş müddəti, dəq</span><input type="number" min="0" data-c="set.editMin" value="${s.editMin}"></label>
+  <label class="field"><span>“Gec göndərilib” həddi, dəq</span><input type="number" min="1" data-c="set.late" value="${s.late}"></label>
+  <label class="field"><span>Şirkət adı</span><input type="text" data-c="company" value="${esc(S.company)}"></label><label class="field"><span>Stikerdə telefon</span><input type="text" data-c="phone" value="${esc(S.phone)}"></label></div></section>`}
+
+/* ================= RƏHBƏR: İSTİFADƏÇİLƏR ================= */
+function vUsers(){const ms=monthStart(TODAY);
+  return `<main class="wrap"><div class="head"><div><h2>İstifadəçilər</h2><p>Hər istifadəçinin ayrıca hesabı var, ortaq giriş yoxdur. İşdən çıxanda hesab bağlanır, silinmir: köhnə qeydlərdə ad qalır.</p></div><button class="btn pri" data-a="crewNew">+ Yeni ekipaj</button></div>
+  <div class="tw"><table><thead><tr><th>İstifadəçi</th><th>Rol</th><th>Avtomobil</th><th class="n">Bu ay kq</th><th>Status</th><th></th></tr></thead><tbody>
+  ${S.staff.map(s=>`<tr><td><b>${esc(s.name)}</b></td><td>${s.role==='admin'?'Rəhbər':'Anbar məsulu'}</td><td>—</td><td class="n">—</td><td><span class="pill ok">aktiv</span></td><td></td></tr>`).join('')}
+  ${S.crews.map(c=>{const cs=COLS().filter(x=>x.crewId===c.id&&x.date>=ms);return `<tr><td><b>${esc(c.driver)}</b><div class="small muted">köməkçi: ${esc(c.helper)} · ${esc(c.email)}</div></td><td>Ekipaj</td><td class="mono">${c.car}</td><td class="n">${q1(cs.reduce((a,x)=>a+x.kg,0))}</td>
+   <td>${c.status==='aktiv'?'<span class="pill ok">aktiv</span>':`<span class="pill crit">bağlı</span><div class="small muted">${fd(c.closedAt)}</div>`}</td><td>${c.status==='aktiv'?`<button class="btn sm danger" data-a="crewClose" data-id="${c.id}">Hesabı bağla</button>`:''}</td></tr>`}).join('')}</tbody></table></div>
+  <section class="card"><h3>Rollar və icazələr</h3><div class="tw"><table><thead><tr><th>Rol</th><th>Ekranlar</th><th>Səlahiyyət</th></tr></thead><tbody>
+   <tr><td><b>Ekipaj</b></td><td>Marşrutum · QR oxut · Qeydlərim</td><td>Öz tapşırığı üzrə yığım; problem və düzəliş sorğusu. Qiymət və ümumi maliyyə görünmür.</td></tr>
+   <tr><td><b>Anbar məsulu</b></td><td>Gözləyən qəbullar · Qəbul edilmişlər</td><td>Faktiki çəki və bidon qəbulu; uyğunsuzluq qeydi. Müqavilə və qiyməti dəyişmir.</td></tr>
+   <tr><td><b>Rəhbər</b></td><td>Panel · Əməliyyatlar · Obyektlər və bidonlar · Maliyyə · Hesabatlar</td><td>Marşrut, istifadəçi, qiymət, köçürmə və əsaslandırılmış düzəliş təsdiqi.</td></tr></tbody></table></div>
+   <p class="small muted">Prototipdə icazələr brauzerdə yoxlanılır. Real sistemdə hər sorğu serverdə rola görə yoxlanmalıdır; bağlanmış hesabdan gələn qeyd qəbul edilmir.</p></section></main>`}
+MODALS.crewNew=function(){return mh('Yeni ekipaj','Yeni işçiyə yeni hesab açılır')+
+  `<div class="form"><label class="field"><span>Sürücü</span><input type="text" id="cnDriver"></label><label class="field"><span>Köməkçi</span><input type="text" id="cnHelper"></label>
+  <label class="field"><span>Avtomobil nömrəsi</span><input type="text" id="cnCar" placeholder="10-AB-123"></label><label class="field"><span>Telefon</span><input type="tel" id="cnPhone" value="+994 "></label>
+  <label class="field"><span>E-poçt</span><input type="email" id="cnEmail"></label><label class="field"><span>PIN (4–8 rəqəm)</span><input type="text" inputmode="numeric" id="cnPin"></label></div>
+  ${errBox(U.modal.err)}<button class="btn pri" data-a="saveCrew">Hesab aç</button>`}
+MODALS.crewClose=function(){const c=crew(U.modal.id);const p=pendingSync(c.id);return mh('Hesabı bağla',esc(c.driver))+
+  `<p class="small">Giriş dərhal kəsilir. Hesab silinmir, köhnə qeydlərdə ad qalır. Bu hesabdan sonradan gələn internetsiz qeydlər qəbul edilmir və rəhbərə xəbərdarlıq gəlir.</p>
+  ${p.length?`<div class="warnbox">Bu ekipajın telefonunda ${p.length} göndərilməmiş qeyd var. Bağlandıqdan sonra qəbul edilməyəcək.</div>`:''}
+  <div class="row"><button class="btn" data-a="close">Ləğv et</button><button class="btn pri" style="background:var(--crit);border-color:var(--crit)" data-a="doClose">Hesabı bağla</button></div>`}
+
+/* ================= CSV ================= */
+function toCsv(rows){return rows.map(r=>r.map(v=>{v=String(v??'');return /[",;\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v}).join(',')).join('\r\n')}
+function csvFor(t){
+  if(t==='col')return toCsv([['Yığım ID','Tarix','Telefon vaxtı','Server vaxtı','Obyekt ID','Obyekt','Bidon','Tutum L','Ekipaj','Əməliyyat','Bidon sonra','İlkin miqdar','İlkin vahid','Doluluq','Dəqiqlik','kq (çevrilmiş)','Çevirmə qaydası','Əmsal','Keyfiyyət','Problem','Müqavilə','Baza','Qiymət','Hesab ₼','Hesab statusu','Partiya','Status','GPS m','Əl ilə','Marşrutdan kənar','Ləğv'],
+    ...filteredCols().map(c=>[c.id,c.date,ft(c.ts),c.serverTs?dk(c.serverTs)+' '+ft(c.serverTs):'',c.objectId,obj(c.objectId).name,c.bidonId,c.cap,crew(c.crewId).driver,OP_S[c.op],c.after?AFTER[c.after]:'',c.qty??'',c.unit??'',c.fill?FILL_LBL[c.fill]:'',c.mode==='olcu'?'ölçülmüş':'təxmini',c.kg,c.rule,c.factor,c.quality==='problem'?'problem':'normal',c.prob?PROB[c.prob.type]:'',CONTRACT_S[c.k.contract],c.k.base,c.k.priceAt,c.amount??'',c.amtSt,c.batchId||'',SYNC[c.sync],c.gps&&c.gps.ok?c.gps.dist:'yoxdur',c.manual?'bəli':'',c.offRoute||'',c.voided?'bəli':''])]);
+  if(t==='vis')return toCsv([['Ziyarət ID','Tarix','Vaxt','Obyekt ID','Obyekt','Ekipaj','Status','Səbəb','Qalan bidonlar','Təsdiq','Səfər haqqı'],...S.visits.filter(srvRec).map(v=>[v.id,v.date,ft(v.ts),v.objectId,obj(v.objectId).name,crew(v.crewId).driver,VST[v.status],v.skip||'',Object.entries(v.left).map(([b,r])=>b+': '+r).join('; '),v.sign?v.sign.name:v.noRep?'yox: '+v.noRep:'',v.fee||''])]);
+  if(t==='batch')return toCsv([['Partiya','Tarix','Vaxt','Ekipaj','Yığımlar','Bidonlar','Bəyan kq','Ümumi kq','Tara kq','Faktiki kq','Fərq kq','Təxmini daxil','Qəbul edən','Qeyd'],...S.batches.map(b=>[b.id,b.date,ft(b.ts),crew(b.crewId).driver,b.colIds.join(' '),b.bidonIds.join(' '),b.declared,b.gross,b.tare,b.net,b.diff,b.hasEst?'bəli':'',b.by,b.note])]);
+  if(t==='bid')return toCsv([['Bidon','Tutum L','Boş çəki kq','Yer','Obyekt ID','Doluluq','Vəziyyət','Təmizlik'],...S.bidons.map(b=>[b.id,b.cap,b.tare,locTxt(b.loc),b.objectId||'',BFILL[b.fill],COND[b.cond],b.clean?CLEAN[b.clean]:''])]);
+  if(t==='mv')return toCsv([['ID','Tarix','Vaxt','Bidon','Növ','Haradan','Haraya','Səbəb','İstifadəçi'],...S.moves.map(m=>[m.id,dk(m.ts),ft(m.ts),m.bidonId,m.kind,m.kind==='yer'?locTxt(m.from):COND[m.fromC],m.kind==='yer'?locTxt(m.to):COND[m.toC],m.why,m.by||''])]);
+  if(t==='obj')return toCsv([['Obyekt ID','Ad','Növ','Ünvan','Zona','Əlaqə','Telefon','Müqavilə','Baza','Qiymət','Tezlik','Status','Qalıq ₼'],...S.objects.map(o=>[o.id,o.name,o.type,o.address,o.zone,o.contact,o.phone,CONTRACT_S[o.contract],o.base,priceOn(o,TODAY),o.freq,o.status,balance(o.id)])]);
+  if(t==='pay')return toCsv([['Ödəniş ID','Tarix','Obyekt ID','Obyekt','İstiqamət','Məbləğ','Üsul','Hesab','Qeyd'],...S.payments.map(p=>[p.id,p.date,p.objectId,obj(p.objectId).name,p.dir==='out'?'biz ödədik':'obyekt ödədi',p.amount,p.method,p.ref||'',p.note||''])]);
+  if(t==='sale')return toCsv([['Növ','ID','Tarix','Alıcı','kq','Qiymət','Məbləğ','Satış ID','Qeyd'],...S.sales.map(s=>['Satış (çıxış)',s.id,s.date,s.buyer,s.kg,s.price,s.amount,'',s.note]),...S.buyerPays.map(p=>['Ödəniş',p.id,p.date,p.buyer,'','',p.amount,p.saleId||'',p.note||''])]);
+}
+function download(name,text,type){const blob=new Blob([type==='json'?text:'﻿'+text],{type:(type==='json'?'application/json':'text/csv')+';charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},800)}
+async function copy(text,msg){try{await navigator.clipboard.writeText(text);toast(msg||'Kopyalandı')}catch(e){toast('Kopyalamaq mümkün olmadı')}}
+
+/* ================= əməliyyatlar ================= */
+const ROLE_ACT={
+  crew:new Set(['close','scrim','logout','doLogout','net','gpsMode','ctab','scan','camOn','camOff','pickBid','manBid','scanBack','reqRaise','asOwner','offGo','secondGo','editMine','op','after','meas','fill','unit','scaleT','exc','qual','prob','photo','saveCol','placeScan','done','leftR','rep','noRepR','sigClear','saveDone','skip','skipR','saveSkip','askFix','saveAskFix','resend','expNew','expT','saveExp']),
+  anbar:new Set(['close','scrim','logout','doLogout','whTab','whSel','whBSel','whSave','batchOpen','dl'])};
+function goOnline(){
+  U.offline=false;saveSess();const cid=U.user;const items=pendingSync(cid);
+  if(!items.length){render();return}
+  items.forEach(x=>x.sync='gozleyir');save();render();
+  setTimeout(()=>{let ok=0,bad=0,cf=0;
+    for(const x of items){const kind=S.collections.includes(x)?'col':S.visits.includes(x)?'vis':'req';const r=serverAccept(x,kind);if(r==='redd')bad++;else if(r==='conflict')cf++;else ok++}
+    save();render();toast(`${ok} qeyd serverə göndərildi${cf?`, ${cf} ziddiyyət yoxlamaya getdi`:''}${bad?`, ${bad} rədd edildi`:''}`)},900);
+}
+function accept(x,kind){if(!U.offline)serverAccept(x,kind)}
+function needVal(id){const el=document.getElementById(id);return el?el.value.trim():''}
+const A={
+  login:()=>{const id=document.getElementById('lgUser').value,pin=document.getElementById('lgPin').value;U.login.id=id;const u=users().find(x=>x.id===id);
+    if(!u||u.pin!==pin){U.login.err='PIN yanlışdır.';render();return}
+    if(u.status!=='aktiv'){U.login.err='Bu hesab bağlanıb. Giriş mümkün deyil.';render();return}
+    U.login.err='';U.user=id;U.view='panel';U.ctab='route';saveSess();render();window.scrollTo(0,0);
+    if(u.role==='crew'&&!U.offline&&pendingSync(id).length)goOnline()},
+  logout:()=>{if(isCrew()&&pendingSync(U.user).length){openModal({type:'logout'});return}A.doLogout()},
+  doLogout:()=>{closeModal();U.user=null;U.offline=false;saveSess();history.replaceState(null,'',location.pathname);render()},
+  nav:d=>{U.view=d.v;U.batch=null;render();window.scrollTo(0,0)},
+  sub:d=>{U.sub[d.v]=d.k;render()},
+  go:d=>{U.view=d.v;if(d.k)U.sub[d.v]=d.k;render();window.scrollTo(0,0)},
+  reset:()=>{try{localStorage.removeItem(KEY)}catch(e){}S=seed();save();U.view='panel';U.wh={};render();toast('Nümunə məlumat bərpa edildi')},
+  close:()=>closeModal(),
+  scrim:(d,el,e)=>{if(e.target===el)closeModal()},
+  /* --- ekipaj --- */
+  net:()=>{if(U.offline)goOnline();else{U.offline=true;saveSess();render()}},
+  gpsMode:d=>{U.gpsMode=d.k;saveSess();render()},
+  ctab:d=>{U.ctab=d.k;render()},
+  scan:d=>openModal({type:'scan',o:d.o||null,r:null,mode:'col'}),
+  placeScan:d=>openModal({type:'scan',o:d.o,r:d.r||null,mode:'place'}),
+  camOn:()=>camOn(),
+  camOff:()=>{stopCam();U.modal.cam=false;renderModal()},
+  pickBid:d=>handleCode(d.b,false),
+  manBid:()=>{const v=needVal('manId');if(!v){U.modal.camErr='Kodu yazın.';renderModal();return}handleCode(v,true)},
+  scanBack:()=>{U.modal.res=null;U.modal.err=null;renderModal()},
+  reqRaise:d=>{const m=U.modal,R=m.res,note=needVal('rqNote');
+    const r={id:nid('req','SR',4),opId:uid(),ts:Date.now(),sync:'telefonda',crewId:U.user,type:d.t,refId:null,bidonId:R.b?R.b.id:R.code,objectId:m.o||R.at||null,
+      reason:(d.t==='namelum'?`Naməlum kod “${R.code}”${R.manual?' (əl ilə)':''}`:`${R.b.id}: ${locTxt(R.b.loc)}, ${COND[R.b.cond]}`)+(note?'. '+note:''),status:'gözləyir'};
+    S.requests.push(r);accept(r,'req');save();closeModal();render();toast(U.offline?'Sorğu telefonda saxlandı, internet gələndə göndəriləcək':'Sorğu rəhbərə göndərildi')},
+  asOwner:()=>{const R=U.modal.res;const st=stopsOf(TODAY,U.user).find(r=>r.objectId===R.b.loc.id&&!visitOf(r));startCol(R.b,st,R.manual,{})},
+  offGo:()=>{const w=needVal('offWhy'),R=U.modal.res;if(!w){U.modal.err='Səbəbi yazın.';renderModal();return}startCol(R.b,null,R.manual,{offRoute:w})},
+  secondGo:()=>{const w=needVal('secWhy'),R=U.modal.res;if(!w){U.modal.err='İkinci yığımın səbəbini yazın.';renderModal();return}startCol(R.b,R.stop,R.manual,{second:w})},
+  editMine:d=>{const c=S.collections.find(x=>x.id===d.id),b=bid(c.bidonId);if(!canEdit(c)){toast('Düzəliş müddəti bitib');return}
+    U.form={mode:'edit',id:c.id,opId:c.opId,bidonId:c.bidonId,objectId:c.objectId,routeId:c.routeId,manual:c.manual,op:c.op,after:c.after||'bos',meas:c.mode,fill:c.fill,
+      qty:c.mode==='olcu'&&!c.scale?String(c.qty):'',unit:c.unit||'kq',useScale:!!c.scale,gross:c.scale?String(c.scale.gross):'',tare:c.scale?String(c.scale.tare):String(b.tare),
+      quality:c.quality,prob:c.prob?.type||null,probNote:c.prob?.note||'',photo:c.prob?.photo||null,exc:!!c.exc,excReason:c.exc?.reason||'',gps:c.gps,offRoute:c.offRoute,second:c.second,err:null};
+    stopCam();U.modal={type:'col'};renderModal()},
+  op:d=>{if(U.form.mode==='edit')return;U.form.op=d.k;renderModal()},
+  after:d=>{U.form.after=d.k;renderModal()},
+  meas:d=>{U.form.meas=d.k;U.form.err=null;renderModal()},
+  fill:d=>{U.form.fill=d.k;U.form.err=null;renderModal()},
+  unit:d=>{U.form.unit=d.u;renderModal()},
+  scaleT:()=>{U.form.useScale=!U.form.useScale;renderModal()},
+  exc:()=>{U.form.exc=!U.form.exc;renderModal()},
+  qual:d=>{U.form.quality=d.k;renderModal()},
+  prob:d=>{U.form.prob=d.k;renderModal()},
+  saveCol:()=>saveCol(),
+  done:d=>{U.form={routeId:d.r,left:{},rep:'var',signName:'',sigImg:null,noRep:null,err:null};openModal({type:'done'})},
+  leftR:d=>{U.form.left[d.b]=d.r;renderModal()},
+  rep:d=>{U.form.rep=d.k;renderModal()},
+  noRepR:d=>{U.form.noRep=d.r;renderModal()},
+  sigClear:()=>{U.form.sigImg=null;renderModal()},
+  saveDone:()=>{const F=U.form,r=S.routes.find(x=>x.id===F.routeId),o=obj(r.objectId),cnt=stopCount(r);
+    if(!cnt.rec.length){F.err='Heç bir bidon qeyd edilməyib. Yığım olmayıbsa “Götürülmədi” seçin.';renderModal();return}
+    if(cnt.left.some(id=>!F.left[id])){F.err='Qeyd edilməyən hər bidon üçün səbəb seçin.';renderModal();return}
+    let sign=null,noRep=null;
+    if(o.needSign){if(F.rep==='var'){if(!F.signName.trim()&&!F.sigImg){F.err='Nümayəndənin adını yazın və ya imza alın.';renderModal();return}sign={name:F.signName.trim()||'İmza',img:F.sigImg}}
+      else{if(!F.noRep){F.err='Nümayəndə olmamasının səbəbini seçin.';renderModal();return}noRep=F.noRep}}
+    const left={};cnt.left.forEach(id=>left[id]=F.left[id]);
+    const v=newVisit(r,U.user,Date.now(),cnt.left.length?'qismen':'tamam',{left,sign,noRep});accept(v,'vis');save();closeModal();render();
+    toast(`${o.name}: ${VST[v.status].toLowerCase()} (${cnt.exp.length} bidondan ${cnt.rec.length}-i)`)},
+  skip:d=>{U.form={routeId:d.r,skip:null,note:'',err:null};openModal({type:'skip'})},
+  skipR:d=>{U.form.skip=d.r;renderModal()},
+  saveSkip:()=>{const F=U.form;if(!F.skip){F.err='Səbəbi seçin.';renderModal();return}const r=S.routes.find(x=>x.id===F.routeId);
+    if(colsOf(r).length){F.err='Bu obyektdə artıq yığım qeyd olunub. “Obyektdə işi tamamla” istifadə edin.';renderModal();return}
+    const v=newVisit(r,U.user,Date.now(),'goturulmedi',{skip:F.skip,skipNote:F.note});accept(v,'vis');save();closeModal();render();toast('Qeyd edildi, sabahkı marşruta təklif olunacaq')},
+  askFix:d=>openModal({type:'askFix',id:d.id}),
+  saveAskFix:()=>{const w=needVal('afWhy');if(!w){U.modal.err='Səbəbi yazın.';renderModal();return}const c=S.collections.find(x=>x.id===U.modal.id);
+    const r={id:nid('req','SR',4),opId:uid(),ts:Date.now(),sync:'telefonda',crewId:U.user,type:'duzelis',refId:c.id,bidonId:c.bidonId,objectId:c.objectId,reason:w,status:'gözləyir'};
+    S.requests.push(r);accept(r,'req');save();closeModal();render();toast('Düzəliş sorğusu göndərildi')},
+  resend:d=>{const c=S.collections.find(x=>x.id===d.id);const r=serverAccept(c,'col');save();render();toast(r==='dup'?`Server ${c.opId.slice(0,8)}… ID-ni artıq qəbul edib: ikinci qeyd yaranmadı`:'Göndərildi')},
+  expNew:()=>{U.form={type:'yanacaq',amount:'',liters:'',km:'',photo:null,note:'',err:null};openModal({type:'exp'})},
+  expT:d=>{U.form.type=d.k;renderModal()},
+  saveExp:()=>{const F=U.form;if(!(+F.amount>0)){F.err='Məbləği yazın.';renderModal();return}
+    if(['yanacaq','temir'].includes(F.type)&&!F.photo){F.err='Yanacaq və təmir üçün çekin şəkli məcburidir.';renderModal();return}
+    const c=crew(U.user);S.expenses.push({id:nid('exp','X',4),ts:Date.now(),date:TODAY,crewId:c.id,car:c.car,type:F.type,amount:r2(+F.amount),liters:F.liters?+F.liters:null,km:F.km?+F.km:null,photo:F.photo,note:F.note,status:'gözləyir'});
+    save();closeModal();render();toast('Xərc göndərildi')},
+  /* --- anbar --- */
+  whTab:d=>{U.whTab=d.k;render()},
+  whSel:d=>{const w=U.wh[d.c];w.sel[d.id]=!w.sel[d.id];render()},
+  whBSel:d=>{const w=U.wh[d.c];w.bsel[d.id]=!w.bsel[d.id];render()},
+  whSave:d=>{const {w,cs,bs}=whState(d.c);const sel=cs.filter(x=>w.sel[x.id]),bsel=bs.filter(b=>w.bsel[b.id]);
+    const g=+w.gross,t=+w.tare||0,net=r1(g-t);
+    if(w.gross===''||!(g>0)){toast('Faktiki ümumi çəkini yazın: çəki yazılmadan qəbul təsdiqlənmir');return}
+    if(!(net>0)){toast('Xalis çəki sıfırdan böyük olmalıdır');return}
+    if(sel.some(c=>c.batchId)){toast('Seçilən yığım artıq başqa partiyadadır');return}
+    const declared=r1(sel.reduce((a,c)=>a+c.kg,0));
+    const b={id:nid('batch','Q',4),crewId:d.c,ts:Date.now(),date:TODAY,colIds:sel.map(c=>c.id),bidonIds:bsel.map(x=>x.id),declared,hasEst:sel.some(c=>c.mode!=='olcu'),gross:g,tare:t,net,diff:r1(net-declared),by:myName(),note:w.note,clean:bsel.length?w.clean:null};
+    sel.forEach(c=>c.batchId=b.id);
+    bsel.forEach(x=>{moveB(x,{t:'anbar',id:'A'},'Anbara qəbul edildi',myName(),b.id);x.fill='bos';x.clean=w.clean});
+    S.batches.push(b);delete U.wh[d.c];save();render();
+    toast(`${b.id} qəbul edildi: qalığa ${q1(net)} kq daxil oldu${Math.abs(b.diff)>=.1?`, çəki fərqi ${b.diff>0?'+':''}${q1(b.diff)} kq ayrıca saxlandı`:''}`)},
+  batchOpen:d=>openModal({type:'batch',id:d.id,wide:true}),
+  /* --- rəhbər --- */
+  alertOpen:d=>openModal({type:'alert',k:d.k}),
+  allAlerts:()=>openModal({type:'allAlerts',wide:true}),
+  showClosed:()=>{U.showClosed=!U.showClosed;renderModal()},
+  openRef:d=>{({col:()=>openModal({type:'colOpen',id:d.id,wide:true}),batch:()=>openModal({type:'batch',id:d.id,wide:true}),bidon:()=>openModal({type:'bidHist',id:d.id,wide:true}),
+    req:()=>openModal({type:'req',id:d.id}),obj:()=>{closeModal();U.view='obyekt';U.sub.obyekt='obyektler';render()}})[d.t]()},
+  alertSave:()=>{const k=U.modal.k,s=S.alertSt[k]||(S.alertSt[k]={});s.owner=needVal('alOwner');s.note=needVal('alNote');save();toast('Saxlandı');renderModal()},
+  alertClose:()=>{const w=needVal('alWhy');if(!w){U.modal.err='Bağlanma səbəbini yazın.';renderModal();return}const k=U.modal.k,s=S.alertSt[k]||(S.alertSt[k]={});
+    Object.assign(s,{owner:needVal('alOwner'),note:needVal('alNote'),closeReason:w,closed:true,closedAt:Date.now(),by:myName()});save();closeModal();render();toast('Xəbərdarlıq bağlandı')},
+  alertReopen:()=>{const s=S.alertSt[U.modal.k];if(s){s.closed=false}save();renderModal();render()},
+  colOpen:d=>openModal({type:'colOpen',id:d.id,wide:true,edit:!!d.edit,reqId:U.modal&&U.modal.type==='req'?U.modal.id:null}),
+  excOk:()=>{const c=S.collections.find(x=>x.id===U.modal.id);c.exc.status='təsdiqləndi';c.exc.by=myName();c.edits.push({by:myName(),at:Date.now(),from:'istisna gözləyir',to:'istisna təsdiqləndi',why:c.exc.reason});
+    derive(c);if(!c.conflict&&!c.offRoute&&!c.second)c.sync='gonderilib';save();renderModal();render();toast('İstisna təsdiqləndi')},
+  excNo:()=>{const c=S.collections.find(x=>x.id===U.modal.id);c.exc.status='rədd edildi';c.edits.push({by:myName(),at:Date.now(),from:'istisna gözləyir',to:'istisna rədd edildi',why:'Rəqəm düzəldilməlidir'});
+    U.modal.edit=true;save();renderModal();render();toast('Rədd edildi: rəqəmi səbəblə düzəldin')},
+  colChecked:()=>{const c=S.collections.find(x=>x.id===U.modal.id);
+    (c.conflict||[]).forEach(id=>{const y=S.collections.find(z=>z.id===id);if(!y)return;y.conflict=(y.conflict||[]).filter(z=>z!==c.id);if(!y.conflict.length){y.conflict=null;if(!y.offRoute&&!y.second&&!(y.exc&&y.exc.status==='gözləyir'))y.sync='gonderilib'}});
+    c.conflict=null;c.sync='gonderilib';c.edits.push({by:myName(),at:Date.now(),from:'yoxlama tələb olunur',to:'yoxlandı, qəbul edildi',why:''});
+    S.requests.filter(r=>r.refId===c.id&&r.type==='kenar'&&r.status==='gözləyir').forEach(r=>{r.status='təsdiqləndi';r.decidedBy=myName();r.decidedAt=Date.now()});
+    save();renderModal();render();toast('Qeyd yoxlanıldı')},
+  saveEditCol:()=>{const M=U.modal,c=S.collections.find(x=>x.id===M.id);const why=needVal('eWhy');if(!why){M.err='Düzəlişin səbəbini yazın.';renderModal();return}
+    const mode=needVal('eMode'),q=needVal('eQty'),unit=needVal('eUnit'),fill=needVal('eFill');
+    if(mode==='olcu'&&!(+q>0)){M.err='Ölçülmüş miqdar sıfırdan böyük olmalıdır.';renderModal();return}
+    const was=colSum(c);c.mode=mode;c.qty=mode==='olcu'?+q:null;c.unit=mode==='olcu'?unit:null;c.fill=mode==='olcu'?null:fill;c.scale=null;
+    if(mode==='olcu'&&c.exc&&conv(c.qty,c.unit,'litr')<=c.cap*1.02){c.exc=null;if(c.sync==='yoxlama'&&!c.conflict&&!c.offRoute&&!c.second)c.sync='gonderilib'}
+    derive(c);c.edits.push({by:myName(),at:Date.now(),from:was,to:colSum(c),why:'Rəhbər düzəlişi: '+why});
+    if(M.reqId){const r=S.requests.find(x=>x.id===M.reqId);if(r){r.status='təsdiqləndi';r.answer='Düzəldildi: '+why;r.decidedBy=myName();r.decidedAt=Date.now()}}
+    save();closeModal();render();toast('Düzəliş tarixçəyə yazıldı')},
+  voidCol:()=>{const M=U.modal,c=S.collections.find(x=>x.id===M.id);const w=needVal('vWhy');if(!w){M.err='Ləğvin səbəbini yazın.';renderModal();return}
+    Object.assign(c,{voided:true,voidAt:Date.now(),voidBy:myName(),voidWhy:w});c.edits.push({by:myName(),at:Date.now(),from:colSum(c),to:'ləğv edildi (əks qeyd)',why:w});
+    save();closeModal();render();toast('Ləğv edildi, əks qeyd hesablaşmaya yazıldı')},
+  rdate:d=>{U.rdate=d.d;render()},
+  assign:d=>{S.routes.push({id:'M'+(++S.seq.stop),date:U.rdate,crewId:d.c,seq:stopsOf(U.rdate,d.c).length+1,objectId:d.o,win:'09:00–18:00',note:''});save();render()},
+  addStop:d=>{const v=document.getElementById('add_'+d.c).value;if(v)A.assign({o:v,c:d.c})},
+  mv:d=>{const s=S.routes.find(r=>r.id===d.id);const list=stopsOf(s.date,s.crewId);const i=list.indexOf(s),j=i+(+d.d);if(j<0||j>=list.length)return;[list[i].seq,list[j].seq]=[list[j].seq,list[i].seq];save();render()},
+  rmStop:d=>{const s=S.routes.find(r=>r.id===d.id);S.routes=S.routes.filter(r=>r!==s);stopsOf(s.date,s.crewId).forEach((r,i)=>r.seq=i+1);save();render()},
+  closeDay:()=>{const d=U.rdate;let n=0;
+    S.routes.filter(r=>r.date===d&&!visitOf(r)).forEach(r=>{const cnt=stopCount(r);n++;let v;
+      if(cnt.rec.length){const left={};cnt.left.forEach(id=>left[id]='Gün bağlananda qeyd edilməyib');v=newVisit(r,r.crewId,Date.now(),'qismen',{left})}
+      else v=newVisit(r,r.crewId,Date.now(),'goturulmedi',{skip:'Digər',skipNote:'Gün bağlananda götürülməyib'});serverAccept(v,'vis')});
+    S.closed[d]=true;save();U.rdate=addDays(d,1);render();toast(n?`Gün bağlandı. ${n} obyekt yekunlaşdırıldı, sabaha təklif olunur.`:'Gün bağlandı')},
+  sheet:d=>openModal({type:'sheet',c:d.c,wide:true}),
+  copySheet:d=>{const c=crew(d.c),st=stopsOf(U.rdate,c.id);
+    copy(`*Marşrut ${fdy(U.rdate)}*\n${c.driver}, ${c.car}\n\n`+st.map(s=>{const o=obj(s.objectId);return `${s.seq}. ${o.name} (${s.win})\n   ${o.address}\n   ${o.contact}: ${o.phone}${o.access?'\n   Giriş: '+o.access:''}${s.note?'\n   Qeyd: '+s.note:''}\n   Xəritə: https://www.google.com/maps/search/?api=1&query=${o.lat},${o.lng}`}).join('\n\n'),'Marşrut mətni kopyalandı')},
+  reqOpen:d=>openModal({type:'req',id:d.id}),
+  reqDecide:d=>{const r=S.requests.find(x=>x.id===U.modal.id);const ans=needVal('rqAns');
+    if(d.v==='rədd edildi'&&!ans){U.modal.err='Rədd səbəbini yazın.';renderModal();return}
+    if(d.v==='təsdiqləndi'&&r.type==='aidiyyet'){const mvEl=document.getElementById('rqMove'),b=bid(r.bidonId);
+      if(mvEl&&mvEl.checked&&b){if(b.cond==='itib')condB(b,'normal','Tapıldı: '+r.reason,myName());moveB(b,{t:'obyekt',id:r.objectId},'Aidiyyət sorğusu təsdiqləndi ('+r.id+')',myName(),r.id)}}
+    if(d.v==='təsdiqləndi'&&r.type==='kenar'){const c=S.collections.find(x=>x.id===r.refId);if(c&&!c.conflict&&!c.second&&!(c.exc&&c.exc.status==='gözləyir'))c.sync='gonderilib'}
+    Object.assign(r,{status:d.v,answer:ans,decidedBy:myName(),decidedAt:Date.now()});save();closeModal();render();toast('Sorğu '+d.v)},
+  dl:d=>download(`yagizi-${d.t}-${TODAY}.csv`,csvFor(d.t)),
+  objNew:()=>openModal({type:'obj',wide:true}),
+  objEdit:d=>openModal({type:'obj',id:d.id,wide:true}),
+  saveObj:()=>{const g=needVal;const isNew=!U.modal.id;
+    if(!g('oName')){U.modal.err='Obyektin adını yazın.';renderModal();return}
+    if(g('oContract')==='obyekt'&&['kq','litr'].includes(g('oBase'))){U.modal.err='Obyekt bizə ödəyirsə, xidmət haqqı yağ miqdarına bağlanmır: “səfər” və ya “sabit aylıq” seçin.';renderModal();return}
+    const o=isNew?{id:'OB-'+pad(S.objects.length+1).padStart(3,'0'),prices:[{from:TODAY,price:+g('oPrice')||0}]}:obj(U.modal.id);
+    Object.assign(o,{name:g('oName'),type:g('oType'),zone:g('oZone'),address:g('oAddr'),access:g('oAccess'),contact:g('oContact'),phone:g('oPhone'),lat:+g('oLat'),lng:+g('oLng'),contract:g('oContract'),base:g('oBase'),
+      freq:Math.max(1,+g('oFreq')||1),status:g('oStatus'),needSign:document.getElementById('oSign').checked});
+    if(isNew)S.objects.push(o);save();closeModal();render();toast(isNew?'Obyekt əlavə edildi. İndi ona bidon bağlayın.':'Saxlandı')},
+  price:d=>openModal({type:'price',id:d.id}),
+  savePrice:()=>{const o=obj(U.modal.id),p=+needVal('pNew'),f=needVal('pFrom');if(needVal('pNew')===''||!(p>=0)||!f){U.modal.err='Qiyməti və tarixi yazın.';renderModal();return}
+    if(f<TODAY){U.modal.err='Qiymət keçmiş tarixdən qüvvəyə minə bilməz: keçmiş hesablar yenidən hesablanmır.';renderModal();return}
+    o.prices=o.prices.filter(x=>x.from!==f);o.prices.push({from:f,price:p,by:myName(),at:Date.now()});o.prices.sort((a,b)=>a.from.localeCompare(b.from));save();closeModal();render();toast('Yeni qiymət '+fd(f)+' tarixindən qüvvədədir')},
+  qrToggle:()=>{U.qr=!U.qr;render()},
+  bidNew:()=>openModal({type:'bidNew'}),
+  saveBid:()=>{const n=Math.min(200,Math.max(1,+needVal('bnN')||1));let cap=needVal('bnCap');cap=cap==='x'?+needVal('bnCapX'):+cap;
+    if(!(cap>0)){U.modal.err='Tutumu yazın.';renderModal();return}const tare=needVal('bnTare')?+needVal('bnTare'):(TARE[cap]||r1(cap*.05)),oid=needVal('bnObj');
+    let max=Math.max(0,...S.bidons.map(b=>+b.id.split('-')[1]));const ids=[];
+    for(let i=0;i<n;i++){const id='YAĞ-'+pad(++max).padStart(4,'0');ids.push(id);const b={id,cap,tare,objectId:null,loc:null,cond:'normal',fill:'bos',clean:oid?null:'temiz',since:TODAY};S.bidons.push(b);moveB(b,oid?{t:'obyekt',id:oid}:{t:'anbar',id:'A'},'İlkin qeydiyyat',myName())}
+    save();closeModal();U.qr=true;render();toast(ids.join(', ')+' yaradıldı')},
+  bidHist:d=>openModal({type:'bidHist',id:d.id,wide:true}),
+  bidAct:d=>openModal({type:'bidAct',id:d.id,k:'move'}),
+  bidK:d=>{U.modal.k=d.k;U.modal.err=null;renderModal()},
+  bidActSave:()=>{const M=U.modal,b=bid(M.id),why=needVal('baWhy');if(!why){M.err='Səbəbi yazın.';renderModal();return}
+    if(M.k==='move'){const to=needVal('baTo');moveB(b,to==='A'?{t:'anbar',id:'A'}:{t:'obyekt',id:to},'Köçürmə: '+why,myName())}
+    else if(M.k==='swap'){const nb=bid(needVal('baNew'));if(!nb){M.err='Anbarda normal bidon yoxdur.';renderModal();return}const loc={...b.loc};
+      moveB(b,{t:'anbar',id:'A'},`Əvəzləndi → ${nb.id}: ${why}`,myName());const oc=needVal('baOldC');if(oc!==b.cond)condB(b,oc,why,myName());
+      if(loc.t==='obyekt')moveB(nb,loc,`${b.id} əvəzinə qoyuldu: ${why}`,myName());nb.fill='bos'}
+    else{const c=needVal('baCond');if(c!==b.cond)condB(b,c,why,myName());const cl=needVal('baClean');if(cl)b.clean=cl}
+    save();closeModal();render();toast('Saxlandı, tarixçəyə yazıldı')},
+  genChg:()=>{const m=U.chgMonth;let n=0;for(const o of S.objects.filter(o=>o.base==='dovr'&&o.contract!=='pulsuz'&&o.status==='aktiv')){if(S.charges.some(c=>c.objectId===o.id&&c.period===m))continue;
+      S.charges.push({id:nid('chg','AH',4),objectId:o.id,period:m,date:m+'-01',contract:o.contract,amount:priceOn(o,m+'-01'),by:myName()});n++}
+    save();render();toast(n?`${n} aylıq haqq yazıldı (${m})`:'Bu ay üçün haqlar artıq yazılıb')},
+  ledger:d=>openModal({type:'ledger',id:d.id,wide:true}),
+  payNew:()=>openModal({type:'pay'}),
+  savePay:()=>{const a=+needVal('pyAmt');if(!(a>0)){U.modal.err='Məbləği yazın.';renderModal();return}
+    S.payments.push({id:nid('pay','P',4),date:needVal('pyDate'),objectId:needVal('pyObj'),dir:needVal('pyDir'),amount:r2(a),method:needVal('pyM'),ref:needVal('pyRef'),note:needVal('pyNote'),createdAt:Date.now(),by:myName()});save();closeModal();render();toast('Ödəniş yazıldı')},
+  opening:()=>openModal({type:'opening'}),
+  saveOpening:()=>{const kg=+needVal('opKg'),date=needVal('opDate');if(needVal('opKg')===''||!(kg>=0)||!date){U.modal.err='Tarixi və sayılan qalığı yazın.';renderModal();return}
+    (S.stock.hist=S.stock.hist||[]).push(S.stock.opening);S.stock.opening={date,kg,by:myName(),note:needVal('opNote'),at:Date.now()};save();closeModal();render();toast('Başlanğıc qalıq yazıldı')},
+  adjNew:()=>openModal({type:'adj'}),
+  saveAdj:()=>{const kg=+needVal('adKg'),w=needVal('adWhy');if(!kg||!w){U.modal.err='Miqdarı və səbəbi yazın.';renderModal();return}
+    S.stock.adj.push({id:nid('adj','D',4),date:needVal('adDate'),kg,reason:w,by:myName(),at:Date.now()});save();closeModal();render();toast('Düzəliş yazıldı')},
+  saleNew:()=>openModal({type:'sale'}),
+  saveSale:()=>{const kg=+needVal('slKg'),p=+needVal('slPrice'),buyer=needVal('slBuyer'),date=needVal('slDate');
+    if(!buyer||!(kg>0)){U.modal.err='Alıcı və miqdarı yazın.';renderModal();return}
+    const avail=Math.min(stockAt(date),stockAt());if(kg>avail){U.modal.err=`Mövcud qalıqdan artıq çıxış bloklanır: qalıq ${q1(avail)} kq.`;renderModal();return}
+    S.sales.push({id:nid('sale','S',4),date,buyer,kg,price:p,amount:r2(kg*p),note:needVal('slNote'),by:myName()});save();closeModal();render();toast('Çıxış yazıldı, qalıq azaldı')},
+  bpayNew:()=>openModal({type:'bpay'}),
+  saveBPay:()=>{const a=+needVal('bpAmt');if(!(a>0)){U.modal.err='Məbləği yazın.';renderModal();return}
+    S.buyerPays.push({id:nid('bpay','AÖ',4),date:needVal('bpDate'),buyer:needVal('bpBuyer'),amount:r2(a),method:needVal('bpM'),saleId:needVal('bpSale'),note:''});save();closeModal();render();toast('Alıcı ödənişi yazıldı')},
+  addAdv:()=>{S.advances.push({date:TODAY,crewId:needVal('advCrew'),amount:+needVal('advAmt')||0});save();render();toast('Avans yazıldı')},
+  expOk:d=>{S.expenses.find(e=>e.id===d.id).status='təsdiqləndi';save();render()},
+  expNo:d=>{S.expenses.find(e=>e.id===d.id).status='rədd edildi';save();render()},
+  svPreset:d=>{U.sv.preset=d.k;render()},
+  genRep:()=>{const[f,t]=period(U.sv.preset);if(f>t){toast('Başlanğıc tarixi son tarixdən sonradır');return}const r=makeReport(U.sv.obj,f,t);save();render();openModal({type:'report',no:r.no,wide:true})},
+  openRep:d=>openModal({type:'report',no:d.no,wide:true}),
+  saveRepStatus:()=>{const r=S.reports.find(x=>x.no===U.modal.no);const st=needVal('mrStatus'),w=needVal('mrWhy');if(st==='mübahisəlidir'&&!w){toast('Mübahisənin səbəbini yazın');return}r.status=st;r.dispute=w;save();closeModal();render();toast('Status saxlandı')},
+  dlRep:d=>{const r=S.reports.find(x=>x.no===d.no),R=buildRep(r.objectId,r.from,r.to);
+    download(`${r.no}-v${r.version}.csv`,toCsv([[S.company+' · Sverka '+r.no+' v'+r.version],[R.o.name,fdy(r.from)+' – '+fdy(r.to)],[],['Tarix','Vaxt','Bidon','İlkin miqdar','Vahid','Dəqiqlik','kq','Qiymət','Məbləğ','Hesab statusu','Ləğv'],
+      ...R.cols.map(c=>[c.date,ft(c.ts),c.bidonId,c.qty??(c.fill?FILL_LBL[c.fill]:''),c.unit??'doluluq',c.mode==='olcu'?'ölçülmüş':'təxmini',c.kg,c.k.priceAt,c.amount??'',c.amtSt,c.voided?'bəli':'']),[],
+      ...R.lines.filter(e=>e.kind!=='Yığım').map(e=>[e.date,'',e.kind,e.txt,'','','','',e.amt]),[],['Əvvələ qalıq',R.open],['Hesablanan',R.acc],['Ödənilən',R.paid],['Sona qalıq',R.close,balText(R.close,R.o)]]))},
+  backup:()=>{S.lastBackup=Date.now();save();download(`yagizi-ehtiyat-${TODAY}.json`,JSON.stringify(S),'json');render();toast('Ehtiyat nüsxə yükləndi')},
+  doRestore:()=>{S=U.modal.data;save();closeModal();U.wh={};render();toast('Məlumat nüsxədən bərpa edildi')},
+  crewNew:()=>openModal({type:'crewNew'}),
+  saveCrew:()=>{const g=needVal;if(!g('cnDriver')||!/^\d{4,8}$/.test(g('cnPin'))){U.modal.err='Sürücünün adı və 4–8 rəqəmli PIN məcburidir.';renderModal();return}
+    if(g('cnEmail')&&S.crews.some(c=>c.email.toLowerCase()===g('cnEmail').toLowerCase())){U.modal.err='Bu e-poçt artıq istifadə olunub. Yeni işçiyə yeni hesab açılır.';renderModal();return}
+    const id='C'+(S.crews.length+1);S.crews.push({id,driver:g('cnDriver'),helper:g('cnHelper')||'—',car:g('cnCar'),phone:g('cnPhone'),email:g('cnEmail'),pin:g('cnPin'),status:'aktiv',since:TODAY});save();closeModal();render();toast('Hesab açıldı')},
+  crewClose:d=>openModal({type:'crewClose',id:d.id}),
+  doClose:()=>{const c=crew(U.modal.id);c.status='bağlı';c.closedAt=TODAY;S.routes=S.routes.filter(r=>!(r.crewId===c.id&&r.date>=TODAY&&!visitOf(r)&&!colsOf(r).length));save();closeModal();render();toast(c.driver+' üçün giriş bağlandı')},
+};
+function dispatch(name,d,el,e){const fn=A[name];if(!fn)return;const u=me();
+  if(!u&&name!=='login')return;
+  if(u&&u.role!=='admin'&&!ROLE_ACT[u.role].has(name)){toast('Bu əməliyyat üçün icazəniz yoxdur');return}
+  fn(d,el,e)}
+document.addEventListener('click',e=>{const el=e.target.closest('[data-a]');if(!el)return;
+  if(el.tagName==='A'&&el.getAttribute('href')==='#')e.preventDefault();
+  if(el.dataset.a==='scrim'){dispatch('scrim',el.dataset,el,e);return}
+  if(el.tagName==='INPUT')return; // checkbox/fayl change ilə işlənir
+  dispatch(el.dataset.a,el.dataset,el,e)});
+document.addEventListener('input',e=>{const t=e.target;
+  if(t.dataset.f&&U.form){U.form[t.dataset.f]=t.value;
+    if((t.dataset.f==='gross'||t.dataset.f==='tare')){const n=document.getElementById('netS');if(n){const v=U.form.gross!==''?r1(+U.form.gross-(+U.form.tare||0)):null;n.textContent=v!=null?q1(v)+' kq':'—'}}
+    if(t.dataset.f==='qty'||t.dataset.f==='gross'){const b=bid(U.form.bidonId);const q=t.dataset.f==='qty'?conv(+t.value,U.form.unit,'litr'):conv(+U.form.gross-(+U.form.tare||0),'kq','litr');const over=q>b.cap*1.02;if(over!==!!U.form._over){U.form._over=over;const p=t.selectionStart;renderModal();const n=document.getElementById(t.id);if(n){n.focus();try{n.setSelectionRange(p,p)}catch(x){}}}}
+    return}
+  if(t.dataset.w){const w=U.wh[t.dataset.c];if(!w)return;w[t.dataset.w]=t.value;const n=document.getElementById('whNet_'+t.dataset.c);
+    if(n){const {cs}=whState(t.dataset.c);const decl=cs.filter(x=>w.sel[x.id]).reduce((a,x)=>a+x.kg,0);const v=w.gross!==''?r1(+w.gross-(+w.tare||0)):null;n.textContent=v!=null?q1(v)+' kq · fərq '+(v-decl>0?'+':'')+q1(v-decl)+' kq':'—'}}});
+document.addEventListener('change',e=>{const t=e.target,k=t.dataset.c;
+  if(t.type==='checkbox'&&t.dataset.a){dispatch(t.dataset.a,t.dataset,t,e);return}
+  if(t.dataset.a==='photo'&&t.files&&t.files[0]){const fr=new FileReader();fr.onload=()=>{const im=new Image();im.onload=()=>{const s=320/Math.max(im.width,im.height);const cv=document.createElement('canvas');cv.width=im.width*s;cv.height=im.height*s;cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);U.form.photo=cv.toDataURL('image/jpeg',.7);renderModal()};im.src=fr.result};fr.readAsDataURL(t.files[0]);return}
+  if(t.dataset.a==='restore'&&t.files&&t.files[0]){if(me()?.role!=='admin')return;const fr=new FileReader();fr.onload=()=>{try{const d=JSON.parse(fr.result);if(!d||d.v!==4||!Array.isArray(d.collections)||!Array.isArray(d.objects))throw 0;openModal({type:'restore',data:d})}catch(x){toast('Fayl Yağ İzi v4 ehtiyat nüsxəsi deyil')}};fr.readAsText(t.files[0]);t.value='';return}
+  if(t.dataset.w){const w=U.wh[t.dataset.c];if(w){w[t.dataset.w]=t.value}return}
+  if(!k||me()?.role!=='admin')return;
+  if(k.startsWith('f.')){U.f[k.slice(2)]=t.value;render();return}
+  if(k.startsWith('sv.')){U.sv[k.slice(3)]=t.value;render();return}
+  if(k.startsWith('bd.')){U.bdate[k.slice(3)]=t.value;render();return}
+  if(k.startsWith('set.')){const v=+t.value;if(v>=0){S.settings[k.slice(4)]=v;save();toast('Saxlandı')}return}
+  if(k==='rdate'){U.rdate=t.value||TODAY;render();return}
+  if(k==='chgMonth'){U.chgMonth=t.value||TODAY.slice(0,7);return}
+  if(k==='stopWin'){S.routes.find(r=>r.id===t.dataset.id).win=t.value;save();return}
+  if(k==='stopNote'){S.routes.find(r=>r.id===t.dataset.id).note=t.value;save();return}
+  if(k==='company'){S.company=t.value||'Atıq Yağ Xidməti';save();return}
+  if(k==='phone'){S.phone=t.value||S.phone;save();return}
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&U.modal)closeModal();if(e.key==='Enter'&&e.target.id==='lgPin')dispatch('login',{});if(e.key==='Enter'&&e.target.id==='manId')dispatch('manBid',{})});
+window.addEventListener('beforeunload',e=>{if(U.user&&isCrew()&&pendingSync(U.user).length){e.preventDefault();e.returnValue=''}});
+window.addEventListener('online',()=>{});
+render();
+(function boot(){const b=new URLSearchParams(location.search).get('b');const u=me();
+  if(u&&u.role==='crew'){if(!U.offline&&pendingSync(u.id).length)goOnline();if(b){openModal({type:'scan',o:null,mode:'col'});handleCode(b,false);history.replaceState(null,'',location.pathname)}}})();
+</script>
+</body>
+</html>
